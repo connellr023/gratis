@@ -12,7 +12,7 @@ use PDOStatement;
  * Class that encapsulates MySQL database functionality
  * @author Connell Reffo
  */
-class Database
+class Database implements IDatabase
 {
     /**
      * @var PDO Is the `PHP Data Object` instance to encapsulate
@@ -46,12 +46,10 @@ class Database
     }
 
     /**
-     * Executes an SQL query
-     * @param string $sql The SQL instruction to be executed
-     * @return PDOStatement An object that represents the successful result of the query
-     * @throws GratisException If the query fails to execute
+     * @inheritDoc
      */
-    public function executeQuery(string $sql): PDOStatement
+    #[\Override]
+    public function execute_query(string $sql): PDOStatement
     {
         if ($statement = $this->pdo->query($sql, PDO::FETCH_ASSOC)) {
             return $statement;
@@ -60,7 +58,8 @@ class Database
         throw new GratisException("Failed to execute query");
     }
 
-    public function executePreparedStatement(string $sql, array $params): PDOStatement
+    #[\Override]
+    public function execute_prepared_statement(string $sql, array $params): PDOStatement
     {
         if ($statement = $this->pdo->prepare($sql)) {
             try {
@@ -76,7 +75,8 @@ class Database
         throw new GratisException("Failed to prepare statement");
     }
 
-    public function fetchAssoc(PDOStatement $statement): array
+    #[\Override]
+    public function fetch_assoc(PDOStatement $statement): array
     {
         if (is_array($result = $statement->fetchAll(PDO::FETCH_ASSOC))) {
             return $result;
