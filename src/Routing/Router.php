@@ -123,9 +123,11 @@ class Router
     public function dispatch(): void
     {
         $method = $_SERVER["REQUEST_METHOD"];
-        $route = $_SERVER["REQUEST_URI"];
-        $request = [];
 
+        $parsed_url = parse_url($_SERVER["REQUEST_URI"]);
+        $route = $parsed_url["path"] ?? "";
+
+        $request = [];
         parse_str(file_get_contents("php://input"), $request);
 
         $this->trigger($method, $route, $request);

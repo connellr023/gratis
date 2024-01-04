@@ -10,7 +10,7 @@ $router->post("/", new class implements \Gratis\Framework\IRequestHandler {
     #[\JetBrains\PhpStorm\NoReturn] #[\Override]
     public function handle_request(array $request): void
     {
-        echo "post";
+        echo "post\n";
     }
 });
 
@@ -19,7 +19,17 @@ $router->patch("/test", new class implements \Gratis\Framework\IRequestHandler {
     #[\JetBrains\PhpStorm\NoReturn] #[\Override]
     public function handle_request(array $request): void
     {
-        echo "patch";
+        echo "patch\n";
+    }
+});
+
+$router->get("/getter", new class implements \Gratis\Framework\IRequestHandler {
+
+    #[\JetBrains\PhpStorm\NoReturn] #[\Override]
+    public function handle_request(array $request): void
+    {
+        echo "get\n";
+        var_dump($request);
     }
 });
 
