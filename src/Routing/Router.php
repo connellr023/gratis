@@ -12,18 +12,21 @@ use Gratis\Framework\IRequestHandler;
 class Router
 {
     /**
-     * @var string[] An array of methods used in this API
+     * @var string[] An array of commonly used HTTP request methods
      */
     private const array METHODS = [
         "GET",
-        "POST"
+        "POST",
+        "PATCH",
+        "PUT",
+        "DELETE"
     ];
 
     /**
      * @var array An associate array. Structured as follows: <br />
      * [
      *  (method) => [
-     *    (route) => [IRequestHandler]
+     *    (route) => IRequestHandler
      *  ]
      * ]
      */
@@ -72,6 +75,30 @@ class Router
     }
 
     /**
+     * Alias for register() with a `PATCH` request
+     */
+    public function patch(string $route, IRequestHandler $handler): void
+    {
+        $this->register("PATCH", $route, $handler);
+    }
+
+    /**
+     * Alias for register() with a `PUT` request
+     */
+    public function put(string $route, IRequestHandler $handler): void
+    {
+        $this->register("PUT", $route, $handler);
+    }
+
+    /**
+     * Alias for register() with a `DELETE` request
+     */
+    public function delete(string $route, IRequestHandler $handler): void
+    {
+        $this->register("DELETE", $route, $handler);
+    }
+
+    /**
      * Notifies a request handler registered to a specified method and route with received request data
      * @param string $method The request method to notify
      * @param string $route The route to notify
@@ -97,7 +124,10 @@ class Router
     {
         $method = $_SERVER["REQUEST_METHOD"];
         $route = $_SERVER["REQUEST_URI"];
+        $request = [];
 
-        $this->trigger($method, $route, $_REQUEST);
+        parse_str(file_get_contents("php://input"), $request);
+
+        $this->trigger($method, $route, $request);
     }
 }
