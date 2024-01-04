@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\router;
 
-use Gratis\Framework\lib\IRequestHandler;
+use Gratis\Framework\IRequestHandler;
 
 /**
  * Handles routes by use of request handlers

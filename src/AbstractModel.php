@@ -1,6 +1,6 @@
 <?php
 
-namespace Gratis\Framework\lib;
+namespace Gratis\Framework;
 
 use Gratis\Framework\database\IDatabase;
 use Gratis\Framework\exceptions\GratisException;

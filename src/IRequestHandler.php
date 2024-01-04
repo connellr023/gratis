@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Gratis\Framework\lib;
+namespace Gratis\Framework;
 
 use JetBrains\PhpStorm\NoReturn;
 
