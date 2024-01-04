@@ -1,6 +1,6 @@
 <?php
 
-namespace Gratis\Framework\http;
+namespace Gratis\Framework\HTTP;
 
 /**
  * Responsible for containing information regarding the client request

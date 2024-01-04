@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Gratis\Framework\router;
+namespace Gratis\Framework\Routing;
 
 use Gratis\Framework\IRequestHandler;
 

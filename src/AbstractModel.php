@@ -2,8 +2,8 @@
 
 namespace Gratis\Framework;
 
-use Gratis\Framework\database\IDatabase;
-use Gratis\Framework\exceptions\GratisException;
+use Gratis\Framework\Database\IDatabase;
+use Gratis\Framework\Exceptions\GratisException;
 
 /**
  * Abstract representation of a class that is used to model an element of a database

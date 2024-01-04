@@ -1,6 +1,6 @@
 <?php
 
-namespace Gratis\Framework\http;
+namespace Gratis\Framework\HTTP;
 
 /**
  * Responsible for sending a HTTP response back to the client

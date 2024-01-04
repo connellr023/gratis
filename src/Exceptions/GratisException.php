@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Gratis\Framework\exceptions;
+namespace Gratis\Framework\Exceptions;
 
 use Throwable;
 use RuntimeException;

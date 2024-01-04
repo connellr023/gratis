@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Gratis\Framework\database;
+namespace Gratis\Framework\Database;
 
-use Gratis\Framework\exceptions\GratisException;
+use Gratis\Framework\Exceptions\GratisException;
 use PDOStatement;
 
 /**
