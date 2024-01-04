@@ -1,0 +1,20 @@
+{
+    "name": "connell/gratis",
+    "description": "A framework for REST development in PHP.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Gratis\\Framework\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Connell Reffo",
+            "email": "connell.reffo@ucalgary.ca"
+        }
+    ],
+    "require": {
+      "ext-pdo": "*"
+    }
+}
