@@ -3,14 +3,29 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\Router;
 
-use Gratis\Framework\IRequestHandler;
-
 /**
  * Defines a contract of functions a basic router should implement
  * @author Connell Reffo
  */
 interface IRouter
 {
+    /**
+     * Registers middleware handlers to this router
+     * @param IMiddlewareHandler ...$handlers A sequence of middleware handlers to be registered
+     * @return void
+     */
+    public function register_middleware(IMiddlewareHandler ...$handlers): void;
+
+    /**
+     * Registers request listener(s) to a supplied request method and route <br />
+     * Routes must follow the following format: `/example/route`
+     * @param string $method The request method to listen for
+     * @param string $route The route to listen for
+     * @param IRequestHandler $handler The request handlers to be registered
+     * @return void
+     */
+    public function register_route(string $method, string $route, IRequestHandler $handler): void;
+
     /**
      * Triggers a request handler registered to a route when a `GET` request is received
      * @param string $route The route accessed
@@ -53,7 +68,7 @@ interface IRouter
 
     /**
      * Starts listening for requests and dispatches requests
-     * to the appropriate request handler
+     * to the appropriate middleware and request handler(s)
      * @return void
      */
     public function dispatch(): void;

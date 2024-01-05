@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Gratis\Framework;
+namespace Gratis\Framework\Router;
 
 use Gratis\Framework\HTTP\Request;
 use Gratis\Framework\HTTP\Response;
