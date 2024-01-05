@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Gratis\Framework\Routing;
+namespace Gratis\Framework\Router;
 
 use Gratis\Framework\IRequestHandler;
 
@@ -55,7 +55,9 @@ class Router
     public function register(string $method, string $route, IRequestHandler $handler): void
     {
         // Sanitize trailing slashes from provided route
-        $route = rtrim(preg_replace("#/+#", "/", $route), "/");
+        if (strlen($route) > 1) {
+            $route = rtrim(preg_replace("#/+#", "/", $route), "/");
+        }
 
         if (!in_array($method, self::METHODS)) {
             return;
