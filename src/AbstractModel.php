@@ -23,9 +23,18 @@ abstract class AbstractModel
      * @param IDatabase $database The instance to use
      * @return void
      */
-    public static function configure_database_instance(IDatabase $database): void
+    public static function configure_db_instance(IDatabase $database): void
     {
         self::$db = $database;
+    }
+
+    /**
+     * Getter for the model-accessible database instance
+     * @return IDatabase
+     */
+    protected static function get_db(): IDatabase
+    {
+        return self::$db;
     }
 
     /**

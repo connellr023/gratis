@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\Router;
 
+use Gratis\Framework\HTTP\Request;
+use Gratis\Framework\HTTP\Response;
 use Gratis\Framework\IRequestHandler;
 
 /**
@@ -47,6 +49,7 @@ class Router implements IRouter
      * In place of a route, a regular expression may also be
      * provided for more advanced route matching <br />
      * Regular expressions must be in the following form: `{<exp>}`
+     * <b>NOTE:</b> Delimiting "/" characters must be included within the braces
      * @param string $method The request method to listen for
      * @param string $route The route to listen for
      * @param IRequestHandler $handler The request handlers to be registered
@@ -68,41 +71,31 @@ class Router implements IRouter
         $this->handlers[$method][$route] = $handler;
     }
 
-    /**
-     * Alias for register() with a `GET` request
-     */
+    #[\Override]
     public function get(string $route, IRequestHandler $handler): void
     {
         $this->register("GET", $route, $handler);
     }
 
-    /**
-     * Alias for register() with a `POST` request
-     */
+    #[\Override]
     public function post(string $route, IRequestHandler $handler): void
     {
         $this->register("POST", $route, $handler);
     }
 
-    /**
-     * Alias for register() with a `PATCH` request
-     */
+    #[\Override]
     public function patch(string $route, IRequestHandler $handler): void
     {
         $this->register("PATCH", $route, $handler);
     }
 
-    /**
-     * Alias for register() with a `PUT` request
-     */
+    #[\Override]
     public function put(string $route, IRequestHandler $handler): void
     {
         $this->register("PUT", $route, $handler);
     }
 
-    /**
-     * Alias for register() with a `DELETE` request
-     */
+    #[\Override]
     public function delete(string $route, IRequestHandler $handler): void
     {
         $this->register("DELETE", $route, $handler);
@@ -112,10 +105,10 @@ class Router implements IRouter
      * Notifies a request handler registered to a specified method and route with received request data <br />
      * @param string $method The request method to notify
      * @param string $route The route to notify
-     * @param array $request The request to be handled by the request handler
+     * @param Request $request The request to be handled by the request handler
      * @return void
      */
-    public function map_route(string $method, string $route, array $request): void
+    public function map_route(string $method, string $route, Request $request): void
     {
         if (!isset($this->handlers[$method][$route])) {
             return;
@@ -123,7 +116,7 @@ class Router implements IRouter
 
         /* @var $handler IRequestHandler */
         $handler = $this->handlers[$method][$route];
-        $handler->handle_request($request);
+        $handler->handle_request($request, new Response());
     }
 
     /**
@@ -139,10 +132,10 @@ class Router implements IRouter
      * request handler will be notified
      * @param string $method The request method to notify
      * @param string $route The route to notify
-     * @param array $request The request to be handled by the request handler
+     * @param Request $request The request to be handled by the request handler
      * @return void
      */
-    public function match_route(string $method, string $route, array $request): void
+    public function match_route(string $method, string $route, Request $request): void
     {
         if (!isset($this->handlers[$method])) {
             return;
@@ -165,7 +158,7 @@ class Router implements IRouter
                 $count = preg_match($route_pattern, $route);
 
                 if ($count > 0) {
-                    $handler->handle_request($request);
+                    $handler->handle_request($request, new Response());
                 }
             }
         }
@@ -174,20 +167,27 @@ class Router implements IRouter
     /**
      * Triggered on request <br />
      * Notifies request handlers based on which method was used and which route was accessed in the request <br />
+     * @param bool $match_regex True if the router should attempt to pattern match routes
      * @return void
      */
-    public function dispatch(): void
+    #[\Override]
+    public function dispatch(bool $match_regex = true): void
     {
         $method = $_SERVER["REQUEST_METHOD"];
 
         $parsed_url = parse_url($_SERVER["REQUEST_URI"]);
         $route = $parsed_url["path"] ?? "";
 
-        $request = [];
-        parse_str(file_get_contents("php://input"), $request);
+        // Generate request object
+        $input = [];
+        parse_str(file_get_contents("php://input"), $input);
+        $req = new Request($route, $input, $_REQUEST);
 
-        // `map_route` will run first; If no matches are made, then `match_route` will run
-        $this->map_route($method, $route, $request);
-        $this->match_route($method, $route, $request);
+        // `map_route` will run first; If no matches are made, then `match_route` will run if `$match_regex` is `true`
+        $this->map_route($method, $route, $req);
+
+        if ($match_regex) {
+            $this->match_route($method, $route, $req);
+        }
     }
 }

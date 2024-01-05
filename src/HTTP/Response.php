@@ -8,5 +8,15 @@ namespace Gratis\Framework\HTTP;
  */
 class Response
 {
+//    public function set_status_code(ResponseCodes $status): void
+//    {
+//        http_response_code($status);
+//    }
 
+//    public function set_headers(string ...$headers): void
+//    {
+//        for ($headers as $header) {
+//            header($header);
+//        }
+//    }
 }

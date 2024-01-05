@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework;
 
+use Gratis\Framework\HTTP\Request;
+use Gratis\Framework\HTTP\Response;
 use JetBrains\PhpStorm\NoReturn;
 
 /**
@@ -14,9 +16,10 @@ interface IRequestHandler
     /**
      * Handles incoming HTTP requests <br />
      * <b>NOTE:</b> This method is intended to terminate the script
-     * @param array $request An associate array that represents the request to be handled
+     * @param Request $req An object that represents an HTTP request
+     * @param Response $res An object that handles sending an HTTP response
      * @return void
      */
     #[NoReturn]
-    public function handle_request(array $request): void;
+    public function handle_request(Request $req, Response $res): void;
 }
