@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Gratis\Framework;
 
@@ -17,11 +18,20 @@ abstract class AbstractModel
      */
     private static IDatabase $db;
 
+    /**
+     * Sets the global model-accessible database instance
+     * @param IDatabase $database The instance to use
+     * @return void
+     */
     public static function configure_database_instance(IDatabase $database): void
     {
         self::$db = $database;
     }
 
+    /**
+     * Base constructor
+     * @throws GratisException If the database reference is not set
+     */
     protected function __construct()
     {
         if (!isset(self::$db)) {
