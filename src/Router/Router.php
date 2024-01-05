@@ -9,7 +9,7 @@ use Gratis\Framework\IRequestHandler;
  * Handles routes by use of request handlers
  * @author Connell Reffo
  */
-class Router
+class Router implements IRouter
 {
     /**
      * @var string[] An array of commonly used HTTP request methods
