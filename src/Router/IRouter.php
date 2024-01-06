@@ -26,6 +26,8 @@ interface IRouter
      */
     public function register_route(string $method, string $route, IRequestHandler $handler): void;
 
+    public function serve_static(string $entry_route, string $serve_path, string $entry_file_name): void;
+
     /**
      * Triggers a request handler registered to a route when a `GET` request is received
      * @param string $route The route accessed

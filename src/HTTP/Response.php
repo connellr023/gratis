@@ -124,4 +124,14 @@ class Response
     {
         die(json_encode($data));
     }
+
+    #[NoReturn]
+    public function send_static(string $path): void
+    {
+        if (readfile($path)) {
+            die;
+        }
+
+        die("");
+    }
 }

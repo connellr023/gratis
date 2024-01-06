@@ -40,6 +40,16 @@ class Request
         return $this->route_accessed;
     }
 
+    public function get_file_accessed_name(): string
+    {
+        $matches = [];
+        $pattern = "/\/([^\/]+\.[^\/]+)$/";
+
+        preg_match($pattern, $this->get_route_accessed(), $matches);
+
+        return $matches[1] ?? "";
+    }
+
     /**
      * Getter for the associate array that represents the input body
      * @return array
@@ -91,7 +101,7 @@ class Request
     /**
      * Gets a value associated with a session key
      * @param string $session_key The session key to get the corresponding value of
-     * @return mixed The key's value or `null` if nothing was found
+     * @return mixed The key"s value or `null` if nothing was found
      */
     public function get_from_session(string $session_key): mixed
     {

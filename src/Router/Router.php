@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\Router;
 
+use Closure;
+use Gratis\Framework\Controllers\ServeStaticController;
 use Gratis\Framework\HTTP\Request;
 use Gratis\Framework\HTTP\Response;
+use JetBrains\PhpStorm\NoReturn;
 use Override;
 
 /**
@@ -37,6 +40,15 @@ class Router implements IRouter
         $this->request_handlers = [];
     }
 
+    public static function sanitize_route_string(string $route): string
+    {
+        if (strlen($route) > 1) {
+            return rtrim(preg_replace("#/+#", "/", $route), "/");
+        }
+
+        return "/";
+    }
+
     #[Override]
     public function register_middleware(IMiddlewareHandler ...$handlers): void
     {
@@ -53,10 +65,7 @@ class Router implements IRouter
     #[Override]
     public function register_route(string $method, string $route, IRequestHandler $handler): void
     {
-        // Sanitize trailing slashes from provided route
-        if (strlen($route) > 1) {
-            $route = rtrim(preg_replace("#/+#", "/", $route), "/");
-        }
+        $route = self::sanitize_route_string($route);
 
         $this->request_handlers[$method] ??= [];
         $this->request_handlers[$method][$route] ??= [];
@@ -189,16 +198,16 @@ class Router implements IRouter
      * Triggered on request <br />
      * First processes middleware then notifies request handlers based on
      * which method was used and which route was accessed in the request
-     * @param bool $match_regex True if the router should attempt to pattern match routes
      * @return void
      */
     #[Override]
-    public function dispatch(bool $match_regex = true): void
+    public function dispatch(): void
     {
         $method = $_SERVER["REQUEST_METHOD"];
 
         $parsed_url = parse_url($_SERVER["REQUEST_URI"]);
         $route = $parsed_url["path"] ?? "";
+        $route = self::sanitize_route_string($route);
 
         // Generate request and response object
         $input = [];
@@ -214,11 +223,17 @@ class Router implements IRouter
         $res = new Response($route);
         $res = $this->process_middleware($req, $res);
 
-        // `map_request_handler` will run first; If no matches are made, then `match_request_handler` will run if `$match_regex` is `true`
+        // `map_request_handler` will run first; If no matches are made, then `match_request_handler` will run
         $this->map_request_handler($method, $req, $res);
+        $this->match_request_handler($method, $req, $res);
+    }
 
-        if ($match_regex) {
-            $this->match_request_handler($method, $req, $res);
-        }
+    #[Override]
+    public function serve_static(string $entry_route, string $serve_path, string $entry_file_name = "index.html"): void
+    {
+        $entry_route = self::sanitize_route_string($entry_route);
+        $route_pattern = "{/^" . ($entry_route === "/" ? "\/" : preg_quote($entry_route, "/")) . ".*$/}";
+
+        $this->get($route_pattern, new ServeStaticController($serve_path, $entry_file_name));
     }
 }

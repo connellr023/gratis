@@ -27,6 +27,7 @@
         "ext-pdo": "*"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "dev": "php -S localhost:8000 src/test_index.php"
     }
 }
