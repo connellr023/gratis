@@ -15,7 +15,7 @@
 <br />
 
 ### Overview
-Gratis is a versatile framework designed to promote the separation of concerns, fostering scalable code practices by encapsulating logic within listeners. Primarily tailored for creating robust and scalable APIs, the framework follows a *REST-like* architectural style. It seamlessly interacts with SQL databases, providing a structured and efficient foundation for building web applications.
+Gratis is a versatile framework designed to promote the separation of concerns, fostering scalable code practices by encapsulating logic within handlers. Primarily tailored for creating robust and scalable APIs, the framework follows a *REST-like* architectural style. It seamlessly interacts with SQL databases, providing a structured and efficient foundation for building web applications.
 
 <br />
 
