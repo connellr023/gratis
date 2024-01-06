@@ -26,18 +26,27 @@ class Database implements IDatabase
     private PDOStatement $last_statement;
 
     /**
-     * Database constructor
+     * Database constructor <br />
+     * This class encapsulates a `PDO` instance - For more information see: https://www.php.net/manual/en/book.pdo.php
      * @param string $hostname The hostname of the database
      * @param string $db_name The name of the database
      * @param string $username The username to interact with the database under
      * @param string $password The user's password
-     * @param string $db_variant Is the variant of this database (`mysql` by default)
+     * @param string $driver Is the driver to be used by this database instance
+     * @param int $port Is the port that the database is running on
      * @throws GratisException If connection fails or configuration of PDO fails
      */
-    public function __construct(string $hostname, string $db_name, string $username, string $password, string $db_variant = "mysql")
+    public function __construct(
+        string $hostname,
+        string $db_name,
+        string $username,
+        string $password,
+        string $driver = "mysql"|"cubrid"|"mssql"|"sybase"|"dblib"|"firebird"|"ibm"|"informix"|"oci"|"odbc"|"pgsql"|"sqlite"|"sqlsrv",
+        int $port = 3306
+    )
     {
         try {
-            $this->pdo = new PDO("$db_variant:host=$hostname;dbname=$db_name", $username, $password);
+            $this->pdo = new PDO("$driver:host=$hostname;dbname=$db_name;port=$port", $username, $password);
 
             if (!(
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION) ||
