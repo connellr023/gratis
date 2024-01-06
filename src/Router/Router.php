@@ -5,6 +5,7 @@ namespace Gratis\Framework\Router;
 
 use Gratis\Framework\HTTP\Request;
 use Gratis\Framework\HTTP\Response;
+use Override;
 
 /**
  * Handles routes by use of request handlers
@@ -36,7 +37,7 @@ class Router implements IRouter
         $this->request_handlers = [];
     }
 
-    #[\Override]
+    #[Override]
     public function register_middleware(IMiddlewareHandler ...$handlers): void
     {
         $this->middleware_handlers = array_merge($this->middleware_handlers, $handlers);
@@ -49,7 +50,7 @@ class Router implements IRouter
      * Regular expressions must be in the following form: `{<exp>}` <br />
      * <b>NOTE:</b> Delimiting "/" characters must be included within the braces
      */
-    #[\Override]
+    #[Override]
     public function register_route(string $method, string $route, IRequestHandler $handler): void
     {
         // Sanitize trailing slashes from provided route
@@ -62,31 +63,31 @@ class Router implements IRouter
         $this->request_handlers[$method][$route] = $handler;
     }
 
-    #[\Override]
+    #[Override]
     public function get(string $route, IRequestHandler $handler): void
     {
         $this->register_route("GET", $route, $handler);
     }
 
-    #[\Override]
+    #[Override]
     public function post(string $route, IRequestHandler $handler): void
     {
         $this->register_route("POST", $route, $handler);
     }
 
-    #[\Override]
+    #[Override]
     public function patch(string $route, IRequestHandler $handler): void
     {
         $this->register_route("PATCH", $route, $handler);
     }
 
-    #[\Override]
+    #[Override]
     public function put(string $route, IRequestHandler $handler): void
     {
         $this->register_route("PUT", $route, $handler);
     }
 
-    #[\Override]
+    #[Override]
     public function delete(string $route, IRequestHandler $handler): void
     {
         $this->register_route("DELETE", $route, $handler);
@@ -191,7 +192,7 @@ class Router implements IRouter
      * @param bool $match_regex True if the router should attempt to pattern match routes
      * @return void
      */
-    #[\Override]
+    #[Override]
     public function dispatch(bool $match_regex = true): void
     {
         $method = $_SERVER["REQUEST_METHOD"];

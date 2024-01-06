@@ -7,6 +7,7 @@ use Gratis\Framework\Exceptions\GratisException;
 use PDO;
 use PDOException;
 use PDOStatement;
+use Override;
 
 /**
  * Class that encapsulates SQL database functionality <br />
@@ -60,7 +61,7 @@ class Database implements IDatabase
         }
     }
 
-    #[\Override]
+    #[Override]
     public function execute_query(string $sql): void
     {
         if ($statement = $this->pdo->query($sql, PDO::FETCH_ASSOC)) {
@@ -71,7 +72,7 @@ class Database implements IDatabase
         throw new GratisException("Failed to execute query");
     }
 
-    #[\Override]
+    #[Override]
     public function execute_prepared_statement(string $sql, string ...$params): void
     {
         if ($statement = $this->pdo->prepare($sql)) {
@@ -89,7 +90,7 @@ class Database implements IDatabase
         throw new GratisException("Failed to prepare statement");
     }
 
-    #[\Override]
+    #[Override]
     public function fetch_assoc(): array
     {
         if (is_array($result = $this->last_statement->fetchAll(PDO::FETCH_ASSOC))) {

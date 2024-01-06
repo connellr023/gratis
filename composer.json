@@ -8,14 +8,25 @@
             "Gratis\\Framework\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Gratis\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Connell Reffo",
             "email": "connell.reffo@ucalgary.ca"
         }
     ],
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
     "require": {
-      "ext-pdo": "*",
-      "ext-http": "*"
+        "php": "^8.3",
+        "ext-pdo": "*"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
     }
 }
