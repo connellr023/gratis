@@ -116,6 +116,8 @@ class Router implements IRouter
     }
 
     /**
+     * <b>NOTE:</b> The route that will attempt to be mapped is the
+     * final route of the response object <br />
      * Notifies a request handler registered to a specified method and route with received request data <br />
      * @param string $method The request method to notify
      * @param Request $req The request to be handled by the request handler
@@ -136,6 +138,8 @@ class Router implements IRouter
     }
 
     /**
+     * <b>NOTE:</b> The route that will attempt to be matched is the
+     * final route of the response object <br />
      * Every registered route will be treated as a regular expression
      * and attempt to match the passed route to each <br />
      *
@@ -199,7 +203,13 @@ class Router implements IRouter
         $input = [];
         parse_str(file_get_contents("php://input"), $input);
 
-        $req = new Request($route, $input, $_REQUEST);
+        $req = new Request(
+            $route,
+            $input,
+            $_REQUEST,
+            $_COOKIE,
+            $_SESSION
+        );
         $res = new Response($route);
         $res = $this->process_middleware($req, $res);
 

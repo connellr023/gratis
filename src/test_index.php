@@ -9,6 +9,8 @@ use Gratis\Framework\Router\IMiddlewareHandler;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
+session_start();
+
 $router = new Router();
 
 $router->register_middleware(
@@ -17,9 +19,11 @@ $router->register_middleware(
     #[\Override]
     public function handle_middleware(Request $req, Response $res, Closure $next): Response
     {
+        var_dump($req->get_from_session("login"));
         //$res->redirect("/getter");
         //$res->set_status_code(404);
         //$res->set_headers("Content-type:application/pdf");
+        $res->append_content("<br />M1<br />");
         $next($req, $res);
 
         return $res;
@@ -31,6 +35,7 @@ $router->register_middleware(
     {
         //$res->redirect("/");
         //$res->set_status_code(\Gratis\Framework\HTTP\Status::OK);
+        $res->append_content("M2<br />");
         $next($req, $res);
 
         return $res;
@@ -42,10 +47,12 @@ $router->get("/", new class implements IRequestHandler {
     #[\JetBrains\PhpStorm\NoReturn] #[\Override]
     public function handle_request(Request $req, Response $res): void
     {
-        echo $req->get_route_accessed() . "\n";
-        echo $res->get_final_route() . "\n";
+        $res->set_cookie("test", "balls", 3600, same_site: "Lax");
 
-        die("<h1>root page</h1>");
+        echo $req->get_route_accessed();
+        echo $res->get_final_route();
+
+        $res->send_content("<h1>Root Page</h1>");
     }
 });
 
@@ -54,7 +61,9 @@ $router->patch("/test", new class implements IRequestHandler {
     #[\JetBrains\PhpStorm\NoReturn] #[\Override]
     public function handle_request(Request $req, Response $res): void
     {
-        die("patch");
+        $res->delete_cookie("test");
+
+        $res->send_content("Patch Request");
     }
 });
 
@@ -63,7 +72,9 @@ $router->get("/getter", new class implements IRequestHandler {
     #[\JetBrains\PhpStorm\NoReturn] #[\Override]
     public function handle_request(Request $req, Response $res): void
     {
-        die("get");
+        //$res->update_session("login", true);
+        $res->update_session("login", true);
+        $res->send_content("<h1>Test Get Page</h1>");
     }
 });
 
@@ -72,8 +83,9 @@ $router->get("{/\A\/test/}", new class implements IRequestHandler {
     #[\JetBrains\PhpStorm\NoReturn] #[\Override]
     public function handle_request(Request $req, Response $res): void
     {
+        $res->update_session("login", false);
         echo "val: " . $req->get_from_url_body("test");
-        die("<h1>test</h1>");
+        $res->send_content("<h1>Test Page</h1>");
     }
 });
 
@@ -83,7 +95,7 @@ $router->get("{/(.*)/}", new class implements IRequestHandler {
     #[\JetBrains\PhpStorm\NoReturn] #[\Override]
     public function handle_request(Request $req, Response $res): void
     {
-        die("<h1>404</h1>");
+        $res->send_content("<h1>404</h1>");
     }
 });
 
