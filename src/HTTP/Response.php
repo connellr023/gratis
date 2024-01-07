@@ -25,9 +25,9 @@ class Response
         $this->content = "";
     }
 
-    public function set_status_code(Status|int $status): void
+    public function set_status_code(int $status): void
     {
-        http_response_code($status->value ?? $status);
+        http_response_code($status);
     }
 
     public function set_headers(string ...$headers): void
@@ -177,7 +177,7 @@ class Response
     public function send_static(string $path, bool $detect_content = true): void
     {
         if (!file_exists($path) || !is_readable($path)) {
-            $this->set_status_code(Status::NOT_FOUND);
+            $this->set_status_code(404);
             die("File not found or not readable");
         }
 

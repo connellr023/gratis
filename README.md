@@ -12,7 +12,6 @@
 
 ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
 ![PhpStorm]( 	http://img.shields.io/badge/-PHPStorm-181717?style=for-the-badge&logo=phpstorm&logoColor=white)
-[![Test Coverage](https://raw.githubusercontent.com/connellr023/gratis/main/badge-coverage.svg)](https://packagist.org/packages/connell/gratis)
 
 <br />
 

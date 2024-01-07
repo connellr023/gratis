@@ -57,10 +57,8 @@ abstract class Utility
      */
     public static function sanitize_route_string(string $route): string
     {
-        if (strlen($route) > 1) {
-            return rtrim(preg_replace("#/+#", "/", $route), "/");
-        }
+        $new = rtrim(preg_replace("#/+#", "/", $route), "/");
 
-        return "/";
+        return strlen($new) > 0 ? $new : "/";
     }
 }
