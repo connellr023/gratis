@@ -25,11 +25,31 @@ class Response
         $this->content = "";
     }
 
+    /**
+     * Sets the HTTP response code
+     * @param int $status The status code to set
+     * @return void
+     */
     public function set_status_code(int $status): void
     {
         http_response_code($status);
     }
 
+    /**
+     * Gets the current HTTP response code <br />
+     * Default is `200`
+     * @return int
+     */
+    public function get_status_code(): int
+    {
+        return http_response_code();
+    }
+
+    /**
+     * Sets HTTP response headers
+     * @param string ...$headers A sequence of headers to be set
+     * @return void
+     */
     public function set_headers(string ...$headers): void
     {
         foreach ($headers as $header) {
@@ -37,11 +57,22 @@ class Response
         }
     }
 
+    /**
+     * Sets the destination route <br />
+     * Should only be used by middleware handlers <br />
+     * Does not set `Location` headers
+     * @param string $route
+     * @return void
+     */
     public function redirect_final_route(string $route): void
     {
         $this->final_route = $route;
     }
 
+    /**
+     * Gets the final route of this response object
+     * @return string
+     */
     public function get_final_route(): string
     {
         return $this->final_route;
