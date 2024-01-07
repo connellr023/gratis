@@ -34,8 +34,10 @@ jobs:
         with:
           php-version: "8.3"
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+      - name: Update and install dependencies
+        run: |
+          composer update
+          composer install --prefer-dist --no-progress
 
       - name: Run PHPUnit tests
         run: composer test

@@ -27,7 +27,7 @@ class ServeAppController implements IRequestHandler
 
     /**
      * Constructor for a `ServeAppController`
-     * @param string $app_build_path Is the full path to where the static webapp markdown is located
+     * @param string $app_build_path Is the full path to where the static webapp markup is located
      * @param string $default_file_path Is the full path to the HTML file that should be served by default
      */
     public function __construct(string $app_build_path, string $default_file_path)
