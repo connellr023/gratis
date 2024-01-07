@@ -40,16 +40,6 @@ class Request
         return $this->route_accessed;
     }
 
-    public function get_file_accessed_name(): string
-    {
-        $matches = [];
-        $pattern = "/\/([^\/]+\.[^\/]+)$/";
-
-        preg_match($pattern, $this->get_route_accessed(), $matches);
-
-        return $matches[1] ?? "";
-    }
-
     /**
      * Getter for the associate array that represents the input body
      * @return array

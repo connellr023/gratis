@@ -3,105 +3,18 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\Router;
 
-use Closure;
 use Gratis\Framework\Controllers\ServeAppController;
 use Gratis\Framework\HTTP\Request;
 use Gratis\Framework\HTTP\Response;
-use JetBrains\PhpStorm\NoReturn;
 use Override;
 
 /**
- * Handles routes by use of request handlers
+ * Handles routes by use of request handlers <br />
+ * Concrete implementation of a router with necessary functionality
  * @author Connell Reffo
  */
-class Router implements IRouter
+class Router extends AbstractRouter
 {
-    /**
-     * @var IMiddlewareHandler[] An array of middleware handlers to be triggered on request
-     */
-    private array $middleware_handlers;
-
-    /**
-     * @var array An associate array. Structured as follows: <br />
-     * [
-     *  (method) => [
-     *    (route) => IRequestHandler
-     *  ]
-     * ]
-     */
-    private array $request_handlers;
-
-    /**
-     * Router constructor
-     */
-    public function __construct()
-    {
-        $this->middleware_handlers = [];
-        $this->request_handlers = [];
-    }
-
-    public static function sanitize_route_string(string $route): string
-    {
-        if (strlen($route) > 1) {
-            return rtrim(preg_replace("#/+#", "/", $route), "/");
-        }
-
-        return "/";
-    }
-
-    #[Override]
-    public function register_middleware(IMiddlewareHandler ...$handlers): void
-    {
-        $this->middleware_handlers = array_merge($this->middleware_handlers, $handlers);
-    }
-
-    /**
-     * If a "/" character is added to the end, it will be removed <br />
-     * In place of a route, a regular expression may also be
-     * provided for more advanced route matching <br />
-     * Regular expressions must be in the following form: `{<exp>}` <br />
-     * <b>NOTE:</b> Delimiting "/" characters must be included within the braces
-     */
-    #[Override]
-    public function register_route(string $method, string $route, IRequestHandler $handler): void
-    {
-        $route = self::sanitize_route_string($route);
-
-        $this->request_handlers[$method] ??= [];
-        $this->request_handlers[$method][$route] ??= [];
-        $this->request_handlers[$method][$route] = $handler;
-    }
-
-    #[Override]
-    public function get(string $route, IRequestHandler $handler): void
-    {
-        $this->register_route("GET", $route, $handler);
-    }
-
-    #[Override]
-    public function post(string $route, IRequestHandler $handler): void
-    {
-        $this->register_route("POST", $route, $handler);
-    }
-
-    #[Override]
-    public function patch(string $route, IRequestHandler $handler): void
-    {
-        $this->register_route("PATCH", $route, $handler);
-    }
-
-    #[Override]
-    public function put(string $route, IRequestHandler $handler): void
-    {
-        $this->register_route("PUT", $route, $handler);
-    }
-
-    #[Override]
-    public function delete(string $route, IRequestHandler $handler): void
-    {
-        $this->register_route("DELETE", $route, $handler);
-    }
-
     /**
      * Processes all middleware handlers
      * @param Request $req The client request object
@@ -115,7 +28,6 @@ class Router implements IRouter
             return $res_next;
         };
 
-        /* @var $handler IMiddlewareHandler */
         foreach ($stack as $handler) {
             $next = function (Request $request, Response $response) use ($handler, $next) {
                 return $handler->handle_middleware($request, $response, $next);
@@ -142,7 +54,6 @@ class Router implements IRouter
             return;
         }
 
-        /* @var $handler IRequestHandler */
         $handler = $this->request_handlers[$method][$route];
         $handler->handle_request($req, $res);
     }
@@ -171,23 +82,14 @@ class Router implements IRouter
             return;
         }
 
-        /* @var $method_handlers array */
         $method_handlers = $this->request_handlers[$method];
         $pattern = "/\{([^{}]+)}/";
 
-        /**
-         * @var $registered_route string
-         * @var $handler IRequestHandler
-         */
         foreach ($method_handlers as $registered_route => $handler) {
-            $matches = [];
-            preg_match($pattern, $registered_route, $matches);
-
-            if (isset($matches[1])) {
+            if (preg_match($pattern, $registered_route, $matches) && isset($matches[1])) {
                 $route_pattern = $matches[1];
-                $count = preg_match($route_pattern, $res->get_final_route());
 
-                if ($count > 0) {
+                if (preg_match($route_pattern, $res->get_final_route()) > 0) {
                     $handler->handle_request($req, $res);
                 }
             }
@@ -196,8 +98,9 @@ class Router implements IRouter
 
     /**
      * Serves to root route: "/" <br />
-     * This function is intended for serving single-page web apps but will statically serve
-     * all files to "/" route in the given `$app_build_path` directory
+     * This function is intended for serving single-page web apps where webpage
+     * routing is handled by a front-end framework <br />
+     * However this will still statically serve all files to "/" route in the given `$app_build_path` directory
      * @param string $app_build_path Is the full path to the directory containing the app's static markup
      * @param string $default_file_path Is the full path to the default file to be served if nothing else found
      * @return void
@@ -218,10 +121,7 @@ class Router implements IRouter
     public function dispatch(): void
     {
         $method = $_SERVER["REQUEST_METHOD"];
-
-        $parsed_url = parse_url($_SERVER["REQUEST_URI"]);
-        $route = $parsed_url["path"] ?? "";
-        $route = self::sanitize_route_string($route);
+        $route = self::sanitize_route_string(parse_url($_SERVER["REQUEST_URI"])["path"] ?? "");
 
         // Generate request and response object
         $input = [];
@@ -234,8 +134,8 @@ class Router implements IRouter
             $_COOKIE,
             $_SESSION
         );
-        $res = new Response($route);
-        $res = $this->process_middleware($req, $res);
+
+        $res = $this->process_middleware($req, new Response($route));
 
         // `map_request_handler` will run first; If no matches are made, then `match_request_handler` will run
         $this->map_request_handler($method, $req, $res);

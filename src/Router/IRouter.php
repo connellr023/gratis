@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Gratis\Framework\Router;
 
 /**
- * Defines a contract of functions a basic router should implement
+ * Defines a contract of functions a basic router can carry out
  * @author Connell Reffo
  */
 interface IRouter
@@ -65,11 +65,4 @@ interface IRouter
      * @return void
      */
     public function delete(string $route, IRequestHandler $handler): void;
-
-    /**
-     * Starts listening for requests and dispatches requests
-     * to the appropriate middleware and request handler(s)
-     * @return void
-     */
-    public function dispatch(): void;
 }

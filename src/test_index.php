@@ -25,14 +25,14 @@ $router = new Router();
 //    }
 //});
 
-$router->serve_app(__DIR__ . "/Build", __DIR__ . "/Build/index.html");
+$router->serve_app(__DIR__ . "/View", __DIR__ . "/View/index.html");
 
-//$router->patch("/Build", new class implements IRequestHandler {
+//$router->patch("/View", new class implements IRequestHandler {
 //
 //    #[\JetBrains\PhpStorm\NoReturn] #[\Override]
 //    public function handle_request(Request $req, Response $res): void
 //    {
-//        $res->delete_cookie("Build");
+//        $res->delete_cookie("View");
 //
 //        $res->send_content("Patch Request");
 //    }
