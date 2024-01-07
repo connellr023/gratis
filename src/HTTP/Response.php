@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Gratis\Framework\HTTP;
 
@@ -13,10 +14,37 @@ class Response
     private string $final_route;
     private string $content;
 
+    /**
+     * Constructor for an HTTP response object
+     * @param string $current_route Is the initial response route
+     */
     public function __construct(string $current_route)
     {
         $this->final_route = $current_route;
         $this->content = "";
+    }
+
+    /**
+     * Utility function for mapping file extensions (case-insensitive) to their
+     * corresponding mime-type for setting content headers
+     * @param string $extension The file extension to get the corresponding mime-type of
+     * @return string The mime-type or `plain/text` if no mapping available
+     */
+    public static function get_mime_type_by_extension(string $extension): string
+    {
+        $mime_types = [
+            "html" => "text/html",
+            "css" => "text/css",
+            "js"  => "application/javascript",
+            "json" => "application/json",
+            "jpg"  => "image/jpeg",
+            "jpeg" => "image/jpeg",
+            "png"  => "image/png",
+            "gif"  => "image/gif",
+            "ico" => "image/vnd.microsoft.icon"
+        ];
+
+        return $mime_types[strtolower($extension)] ?? "plain/text";
     }
 
     public function set_status_code(Status|int $status): void
@@ -75,8 +103,14 @@ class Response
         ]);
     }
 
+    /**
+     * Removes a cookie
+     * @param string $name The name of the cookie to remove
+     * @return void
+     */
     public function delete_cookie(string $name): void
     {
+        unset($_COOKIE[$name]);
         setcookie($name, "", -1, "/");
     }
 
@@ -91,21 +125,42 @@ class Response
         $_SESSION[$session_key] = $value;
     }
 
+    /**
+     * Strictly sets the content string to be sent
+     * @param string $content The content to be set
+     * @return void
+     */
     public function set_content(string $content): void
     {
         $this->content = $content;
     }
 
+    /**
+     * Concatenates onto the current content string
+     * @param string $to_append The content to be appended
+     * @return void
+     */
     public function append_content(string $to_append): void
     {
         $this->content = $this->content . $to_append;
     }
 
+    /**
+     * Getter for the response content string
+     * @return string
+     */
     public function get_content(): string
     {
         return $this->content;
     }
 
+    /**
+     * Sends the content <br />
+     * Terminates the script
+     * @param string $content Additional content to be sent
+     * @param bool $append If the additional content should be appended or reset
+     * @return void
+     */
     #[NoReturn]
     public function send_content(string $content = "", bool $append = true): void
     {
@@ -119,19 +174,43 @@ class Response
         die($this->content);
     }
 
+    /**
+     * JSON encodes an array and sends it to the client <br />
+     * Terminates the script
+     * @param array $data The array to be encoded and sent
+     * @return void
+     */
     #[NoReturn]
     public function send_encoded(array $data): void
     {
         die(json_encode($data));
     }
 
+    /**
+     * Sends a static file to the client <br />
+     * If the file is not found or readable, then
+     * a `404` status code header will be attached to the response <br />
+     * Terminates the script
+     * @param string $path The full path to the file to be sent
+     * @param bool $detect_content If mime-type of the file should attempt to be detected
+     * @return void
+     */
     #[NoReturn]
-    public function send_static(string $path): void
+    public function send_static(string $path, bool $detect_content = true): void
     {
-        if (readfile($path)) {
-            die;
+        if (!file_exists($path) || !is_readable($path)) {
+            $this->set_status_code(Status::NOT_FOUND);
+            die("File not found or not readable");
         }
 
-        die("");
+        if ($detect_content) {
+            $extension = pathinfo($path, PATHINFO_EXTENSION);
+            $mime_type = self::get_mime_type_by_extension($extension);
+
+            $this->set_headers("Content-Type: $mime_type");
+        }
+
+        readfile($path);
+        die;
     }
 }

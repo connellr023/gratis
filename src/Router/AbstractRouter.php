@@ -26,7 +26,7 @@ abstract class AbstractRouter implements IRouter
     protected array $request_handlers;
 
     /**
-     * Router constructor
+     * Base constructor
      */
     public function __construct()
     {

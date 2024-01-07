@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Gratis\Framework\HTTP;
 
@@ -91,7 +92,7 @@ class Request
     /**
      * Gets a value associated with a session key
      * @param string $session_key The session key to get the corresponding value of
-     * @return mixed The key"s value or `null` if nothing was found
+     * @return mixed The key's value or `null` if nothing was found
      */
     public function get_from_session(string $session_key): mixed
     {
