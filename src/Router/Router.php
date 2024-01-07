@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\Router;
 
-use Gratis\Framework\Controllers\ServeAppController;
+use Gratis\Framework\Controllers\ServeStaticDirectoryController;
 use Gratis\Framework\HTTP\Request;
 use Gratis\Framework\HTTP\Response;
+use Gratis\Framework\Utility;
 use Override;
 
 /**
@@ -108,7 +109,7 @@ class Router extends AbstractRouter
     public function serve_app(string $app_build_path, string $default_file_path): void
     {
         $route_pattern = "~^\/?(\/[\w.-]+)*$~";
-        $this->get("{ $route_pattern }", new ServeAppController($app_build_path, $default_file_path));
+        $this->get("{ $route_pattern }", new ServeStaticDirectoryController($app_build_path, $default_file_path));
     }
 
     /**
@@ -121,7 +122,7 @@ class Router extends AbstractRouter
     public function dispatch(): void
     {
         $method = $_SERVER["REQUEST_METHOD"];
-        $route = self::sanitize_route_string(parse_url($_SERVER["REQUEST_URI"])["path"] ?? "");
+        $route = Utility::sanitize_route_string(parse_url($_SERVER["REQUEST_URI"])["path"] ?? "");
 
         // Generate request and response object
         $input = [];

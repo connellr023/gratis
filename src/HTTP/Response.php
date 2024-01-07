@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\HTTP;
 
+use Gratis\Framework\Utility;
 use JetBrains\PhpStorm\NoReturn;
 
 /**
@@ -22,29 +23,6 @@ class Response
     {
         $this->final_route = $current_route;
         $this->content = "";
-    }
-
-    /**
-     * Utility function for mapping file extensions (case-insensitive) to their
-     * corresponding mime-type for setting content headers
-     * @param string $extension The file extension to get the corresponding mime-type of
-     * @return string The mime-type or `plain/text` if no mapping available
-     */
-    public static function get_mime_type_by_extension(string $extension): string
-    {
-        $mime_types = [
-            "html" => "text/html",
-            "css" => "text/css",
-            "js"  => "application/javascript",
-            "json" => "application/json",
-            "jpg"  => "image/jpeg",
-            "jpeg" => "image/jpeg",
-            "png"  => "image/png",
-            "gif"  => "image/gif",
-            "ico" => "image/vnd.microsoft.icon"
-        ];
-
-        return $mime_types[strtolower($extension)] ?? "plain/text";
     }
 
     public function set_status_code(Status|int $status): void
@@ -205,7 +183,7 @@ class Response
 
         if ($detect_content) {
             $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $mime_type = self::get_mime_type_by_extension($extension);
+            $mime_type = Utility::get_mime_type_by_extension($extension);
 
             $this->set_headers("Content-Type: $mime_type");
         }

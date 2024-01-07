@@ -11,7 +11,7 @@
 </div>
 
 ![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
-![PhpStorm](https://img.shields.io/badge/phpstorm-143?style=for-the-badge&logo=phpstorm&logoColor=black&color=black&labelColor=darkorchid)
+![PhpStorm]( 	http://img.shields.io/badge/-PHPStorm-181717?style=for-the-badge&logo=phpstorm&logoColor=white)
 
 
 <br />
@@ -83,10 +83,10 @@ composer install
 
 <br />
 
-### Running The **PHPUnit** Test Suite
+### Running The PHPUnit Test Suite
 In order to the run the automated test suite for this framework, execute,
 ```bash
-composer View
+composer test
 ```
 or see the **GitHub Actions** tab.
 

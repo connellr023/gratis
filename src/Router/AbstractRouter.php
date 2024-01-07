@@ -2,6 +2,7 @@
 
 namespace Gratis\Framework\Router;
 
+use Gratis\Framework\Utility;
 use Override;
 
 /**
@@ -34,20 +35,6 @@ abstract class AbstractRouter implements IRouter
         $this->request_handlers = [];
     }
 
-    /**
-     * Static utility method for ensuring routes do not end with "/"
-     * @param string $route The route to be sanitized
-     * @return string The sanitized route string
-     */
-    public static function sanitize_route_string(string $route): string
-    {
-        if (strlen($route) > 1) {
-            return rtrim(preg_replace("#/+#", "/", $route), "/");
-        }
-
-        return "/";
-    }
-
     #[Override]
     public function register_middleware(IMiddlewareHandler ...$handlers): void
     {
@@ -64,7 +51,7 @@ abstract class AbstractRouter implements IRouter
     #[Override]
     public function register_route(string $method, string $route, IRequestHandler $handler): void
     {
-        $route = self::sanitize_route_string($route);
+        $route = Utility::sanitize_route_string($route);
 
         $this->request_handlers[$method] ??= [];
         $this->request_handlers[$method][$route] ??= [];
