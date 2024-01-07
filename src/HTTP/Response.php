@@ -31,7 +31,7 @@ class Response
         }
     }
 
-    public function redirect(string $route): void
+    public function redirect_final_route(string $route): void
     {
         $this->final_route = $route;
     }

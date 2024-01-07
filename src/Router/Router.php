@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Gratis\Framework\Router;
 
 use Closure;
-use Gratis\Framework\Controllers\ServeStaticController;
+use Gratis\Framework\Controllers\ServeAppController;
 use Gratis\Framework\HTTP\Request;
 use Gratis\Framework\HTTP\Response;
 use JetBrains\PhpStorm\NoReturn;
@@ -195,6 +195,19 @@ class Router implements IRouter
     }
 
     /**
+     * Serves to root route: "/" <br />
+     * This function is intended for serving single-page web apps
+     * @param string $app_build_path Is the full path to the directory containing the app's static markup
+     * @param string $default_file_name Is the name of the default file to be served if nothing else found
+     * @return void
+     */
+    public function serve_app(string $app_build_path, string $default_file_name = "index.html"): void
+    {
+        $route_pattern = "~^\/?(\/[\w.-]+)*$~";
+        $this->get("{ $route_pattern }", new ServeAppController($app_build_path, $default_file_name));
+    }
+
+    /**
      * Triggered on request <br />
      * First processes middleware then notifies request handlers based on
      * which method was used and which route was accessed in the request
@@ -226,14 +239,5 @@ class Router implements IRouter
         // `map_request_handler` will run first; If no matches are made, then `match_request_handler` will run
         $this->map_request_handler($method, $req, $res);
         $this->match_request_handler($method, $req, $res);
-    }
-
-    #[Override]
-    public function serve_static(string $entry_route, string $serve_path, string $entry_file_name = "index.html"): void
-    {
-        $entry_route = self::sanitize_route_string($entry_route);
-        $route_pattern = "{/^" . ($entry_route === "/" ? "\/" : preg_quote($entry_route, "/")) . ".*$/}";
-
-        $this->get($route_pattern, new ServeStaticController($serve_path, $entry_file_name));
     }
 }

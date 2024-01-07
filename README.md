@@ -81,7 +81,7 @@ composer install
 ### Running The **PHPUnit** Test Suite
 In order to the run the automated test suite for this framework, execute,
 ```bash
-composer test
+composer Build
 ```
 or see the **GitHub Actions** tab.
 
