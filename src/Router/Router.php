@@ -196,15 +196,16 @@ class Router implements IRouter
 
     /**
      * Serves to root route: "/" <br />
-     * This function is intended for serving single-page web apps
+     * This function is intended for serving single-page web apps but will statically serve
+     * all files to "/" route in the given `$app_build_path` directory
      * @param string $app_build_path Is the full path to the directory containing the app's static markup
-     * @param string $default_file_name Is the name of the default file to be served if nothing else found
+     * @param string $default_file_path Is the full path to the default file to be served if nothing else found
      * @return void
      */
-    public function serve_app(string $app_build_path, string $default_file_name = "index.html"): void
+    public function serve_app(string $app_build_path, string $default_file_path): void
     {
         $route_pattern = "~^\/?(\/[\w.-]+)*$~";
-        $this->get("{ $route_pattern }", new ServeAppController($app_build_path, $default_file_name));
+        $this->get("{ $route_pattern }", new ServeAppController($app_build_path, $default_file_path));
     }
 
     /**

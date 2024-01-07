@@ -25,7 +25,7 @@ $router = new Router();
 //    }
 //});
 
-$router->serve_app(__DIR__ . "/Build");
+$router->serve_app(__DIR__ . "/Build", __DIR__ . "/Build/index.html");
 
 //$router->patch("/Build", new class implements IRequestHandler {
 //
