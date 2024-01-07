@@ -40,4 +40,4 @@ jobs:
           composer install --prefer-dist --no-progress
 
       - name: Run PHPUnit tests
-        run: composer test
+        run: composer test-coverage

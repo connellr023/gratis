@@ -27,7 +27,8 @@
         "ext-pdo": "*"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
+        "test": "vendor/bin/phpunit --no-coverage",
+        "test-coverage": "vendor/bin/phpunit --coverage-clover coverage.xml",
         "dev": "php -S localhost:8000 src/test_index.php"
     }
 }
