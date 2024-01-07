@@ -21,13 +21,13 @@ interface IDatabase
 
     /**
      * Prepares an SQL query and then inserts a sequence of parameters into their
-     * respective positions denoted by "?"
-     * @param string $sql
-     * @param string ...$params
+     * respective positions denoted by "?" or ":param"
+     * @param string $sql The SQL command to be prepared
+     * @param array $params The parameters to be inserted
      * @return void
-     * @throws GratisException If the query fails to prepare and execute
+     * @throws GratisException If the query fails to prepare or execute
      */
-    public function execute_prepared_statement(string $sql, string ...$params): void;
+    public function execute_prepared_statement(string $sql, array $params): void;
 
     /**
      * Fetches an associative array of values based on the `SELECT` query just made
