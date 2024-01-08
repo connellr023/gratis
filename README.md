@@ -10,9 +10,6 @@
  <img src="https://github.com/connellr023/gratis/actions/workflows/ci.yml/badge.svg">
 </div>
 
-![PHP](https://img.shields.io/badge/php-%23777BB4.svg?style=for-the-badge&logo=php&logoColor=white)
-![PhpStorm]( 	http://img.shields.io/badge/-PHPStorm-181717?style=for-the-badge&logo=phpstorm&logoColor=white)
-
 <br />
 
 ### Table Of Contents
@@ -21,6 +18,7 @@
     - [Middlewares](#middlewares)
     - [Controllers](#controllers)
     - [Models](#models)
+    - [View](#view)
 - [Development](#development)
     - [Dependencies](#dependencies)
     - [Installing Dependencies](#installing-dependencies)

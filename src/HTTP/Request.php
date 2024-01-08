@@ -53,11 +53,11 @@ class Request
     /**
      * Gets the corresponding value from a key in the request input body
      * @param string $key The key to get the corresponding value of
-     * @return string The value or empty string if nothing found
+     * @return string|false The value or `false` if nothing found
      */
-    public function get_from_input_body(string $key): string
+    public function get_from_input_body(string $key): string|false
     {
-        return $this->get_input_body()[$key] ?? "";
+        return $this->get_input_body()[$key] ?? false;
     }
 
     /**
@@ -72,21 +72,21 @@ class Request
     /**
      * Gets the corresponding value from a key in the url body
      * @param string $key The key to get the corresponding value of
-     * @return string The value or empty string if nothing found
+     * @return string|false The value or `false` if nothing found
      */
-    public function get_from_url_body(string $key): string
+    public function get_from_url_body(string $key): string|false
     {
-        return $this->get_url_body()[$key] ?? "";
+        return $this->get_url_body()[$key] ?? false;
     }
 
     /**
      * Gets the value associated with a cookie
      * @param string $cookie_key The name of the cookie
-     * @return string The associated value or empty string if nothing found
+     * @return string|false The associated value or `false` if nothing found
      */
-    public function get_cookie(string $cookie_key): string
+    public function get_cookie(string $cookie_key): string|false
     {
-        return $this->cookies[$cookie_key] ?? "";
+        return $this->cookies[$cookie_key] ?? false;
     }
 
     /**
@@ -103,10 +103,10 @@ class Request
      * Gets the value associated with a given HTTP header <br />
      * Uses built in `getallheaders` PHP function
      * @param string $header_name The name of the header to get the value of
-     * @return string The header value or empty string if nothing found
+     * @return string|false The header value or `false` if nothing found
      */
-    public function get_from_header(string $header_name): string
+    public function get_from_header(string $header_name): string|false
     {
-        return getallheaders()[$header_name] ?? "";
+        return getallheaders()[$header_name] ?? false;
     }
 }

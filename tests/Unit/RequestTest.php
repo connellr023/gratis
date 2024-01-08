@@ -37,7 +37,7 @@ class RequestTest extends TestCase
     public function test_get_cookie(): void
     {
         $this->assertSame($this->cookies["cookie_name"], $this->req->get_cookie("cookie_name"));
-        $this->assertSame("", $this->req->get_cookie("sdgf"));
+        $this->assertSame(false, $this->req->get_cookie("sdgf"));
     }
 
     public function test_get_from_session(): void
@@ -49,12 +49,17 @@ class RequestTest extends TestCase
     public function test_get_from_input_body(): void
     {
         $this->assertSame($this->input_body["input_param"], $this->req->get_from_input_body("input_param"));
-        $this->assertSame("", $this->req->get_from_input_body("dfg"));
+        $this->assertSame(false, $this->req->get_from_input_body("dfg"));
     }
 
     public function test_get_from_url_body(): void
     {
         $this->assertSame($this->url_body["url_param"], $this->req->get_from_url_body("url_param"));
-        $this->assertSame("", $this->req->get_from_url_body("gfd"));
+        $this->assertSame(false, $this->req->get_from_url_body("gfd"));
+    }
+
+    public function test_get_from_header_non_existent(): void
+    {
+        $this->assertSame(false, $this->req->get_from_header(""));
     }
 }
