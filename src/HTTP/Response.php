@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Gratis\Framework\HTTP;
 
 use Gratis\Framework\Utility;
-use JetBrains\PhpStorm\NoReturn;
 
 /**
  * Responsible for sending HTTP responses back to the client
@@ -14,6 +13,7 @@ class Response
 {
     private string $final_route;
     private string $content;
+    private int $status_code;
 
     /**
      * Constructor for an HTTP response object
@@ -23,6 +23,7 @@ class Response
     {
         $this->final_route = $current_route;
         $this->content = "";
+        $this->status_code = 200;
     }
 
     /**
@@ -33,16 +34,22 @@ class Response
     public function set_status_code(int $status): void
     {
         http_response_code($status);
+        $this->status_code = $status;
     }
 
     /**
-     * Gets the current HTTP response code <br />
-     * Default is `200`
+     * Gets the current HTTP response code
      * @return int
      */
     public function get_status_code(): int
     {
-        return http_response_code();
+        if (is_int(http_response_code())) {
+            $this->status_code = http_response_code();
+
+            return $this->status_code;
+        }
+
+        return $this->status_code;
     }
 
     /**
@@ -90,6 +97,7 @@ class Response
      * @param bool $http_only True if cookie should be accessible only via HTTP
      * @param string $same_site Attribute that is "None", "Lax", or "Strict"
      * @return void
+     * @codeCoverageIgnore
      */
     public function set_cookie(
         string $name,
@@ -170,7 +178,6 @@ class Response
      * @param bool $append If the additional content should be appended or reset
      * @return void
      */
-    #[NoReturn]
     public function send_content(string $content = "", bool $append = true): void
     {
         if ($append) {
@@ -180,36 +187,34 @@ class Response
             $this->set_content($content);
         }
 
-        die($this->content);
+        echo $this->content;
     }
 
     /**
-     * JSON encodes an array and sends it to the client <br />
-     * Terminates the script
+     * JSON encodes an array and sends it to the client
      * @param array $data The array to be encoded and sent
      * @return void
      */
-    #[NoReturn]
     public function send_encoded(array $data): void
     {
-        die(json_encode($data));
+        echo json_encode($data);
     }
 
     /**
      * Sends a static file to the client <br />
      * If the file is not found or readable, then
-     * a `404` status code header will be attached to the response <br />
-     * Terminates the script
+     * a `404` status code header will be attached to the response
      * @param string $path The full path to the file to be sent
      * @param bool $detect_content If mime-type of the file should attempt to be detected
      * @return void
      */
-    #[NoReturn]
     public function send_static(string $path, bool $detect_content = true): void
     {
         if (!file_exists($path) || !is_readable($path)) {
             $this->set_status_code(404);
-            die("File not found or not readable");
+
+            echo "File not found or not readable";
+            return;
         }
 
         if ($detect_content) {
@@ -220,6 +225,5 @@ class Response
         }
 
         readfile($path);
-        die;
     }
 }

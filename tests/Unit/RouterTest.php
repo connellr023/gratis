@@ -43,6 +43,33 @@ class RouterTest extends TestCase
     }
 
     /* @throws Exception */
+    public function test_register_route_same_twice(): void
+    {
+        $router = new RouterStub();
+        $rh1 = $this->getMockBuilder(IRequestHandler::class)
+            ->setMockClassName("unique1")
+            ->getMock();
+
+        $rh2 = $this->getMockBuilder(IRequestHandler::class)
+            ->setMockClassName("unique2")
+            ->getMock();
+
+        $method = "TEST";
+        $route = "/";
+
+        $expected = [
+            $method => [
+                $route => $rh2
+            ]
+        ];
+
+        $this->assertEquals([], $router->reflect_request_handlers());
+        $router->register_route($method, $route, $rh1);
+        $router->register_route($method, $route, $rh2);
+        $this->assertEquals($expected, $router->reflect_request_handlers());
+    }
+
+    /* @throws Exception */
     public function test_get(): void
     {
         $router = new RouterStub();

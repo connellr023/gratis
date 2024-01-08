@@ -30,7 +30,7 @@ abstract class AbstractIntegrationTestCase extends TestCase
 
         // Start the server before the first test in the class
         if (!self::$server_started) {
-            $command = "php -S " . self::HOST . " " . __DIR__ . "/src/index.php";
+            $command = "php -S " . self::HOST . " " . __DIR__ . "/src/test.php";
             $descriptor_spec = array(
                 0 => array("pipe", "r"),
                 1 => array("pipe", "w")

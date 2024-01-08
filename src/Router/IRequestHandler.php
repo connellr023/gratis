@@ -15,11 +15,10 @@ interface IRequestHandler
 {
     /**
      * Handles incoming HTTP requests <br />
-     * <b>NOTE:</b> This method is intended to terminate the script
+     * This function is permitted to terminate the script
      * @param Request $req An object that represents an HTTP request
      * @param Response $res An object that handles sending an HTTP response
      * @return void
      */
-    #[NoReturn]
     public function handle_request(Request $req, Response $res): void;
 }
