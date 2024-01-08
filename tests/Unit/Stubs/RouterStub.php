@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Gratis\Tests\Stubs;
+namespace Gratis\Tests\Unit\Stubs;
 
 use Gratis\Framework\Router\Router;
 

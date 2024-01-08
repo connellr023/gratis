@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace Gratis\Tests\Unit;
 
 use Gratis\Framework\Exceptions\GratisException;
-use Gratis\Tests\Stubs\DatabaseStub;
+use Gratis\Tests\Unit\Stubs\DatabaseStub;
+use PDO;
+use PDOException;
+use PDOStatement;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
-use PDO;
-use PDOStatement;
-use PDOException;
 
 class DatabaseTest extends TestCase
 {

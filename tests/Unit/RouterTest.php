@@ -5,7 +5,7 @@ namespace Gratis\Tests\Unit;
 
 use Gratis\Framework\Router\IMiddlewareHandler;
 use Gratis\Framework\Router\IRequestHandler;
-use Gratis\Tests\Stubs\RouterStub;
+use Gratis\Tests\Unit\Stubs\RouterStub;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 

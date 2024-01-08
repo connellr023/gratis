@@ -3,9 +3,9 @@ declare(strict_types = 1);
 
 namespace Gratis\Tests\Unit;
 
-use Gratis\Tests\Stubs\AbstractModelStub;
 use Gratis\Framework\AbstractModel;
 use Gratis\Framework\Database\IDatabase;
+use Gratis\Tests\Unit\Stubs\AbstractModelStub;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 

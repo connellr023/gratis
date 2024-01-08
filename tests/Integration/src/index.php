@@ -10,16 +10,16 @@ use JetBrains\PhpStorm\NoReturn;
 
 require_once __DIR__ . "/../../../vendor/autoload.php";
 
-session_start();
-
 $router = new Router();
 
-$router->patch("/", new class implements IRequestHandler {
+$router->serve_app(__DIR__ . "/View", __DIR__ . "/View/index.html");
+
+$router->get("/api", new class implements IRequestHandler {
 
     #[NoReturn] #[Override]
     public function handle_request(Request $req, Response $res): void
     {
-        $res->set_status_code(200);
+        echo "get";
     }
 });
 

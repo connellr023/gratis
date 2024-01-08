@@ -17,6 +17,35 @@ use Override;
 class Router extends AbstractRouter
 {
     /**
+     * @var bool Tracks if a request handler has been triggered yet or not
+     */
+    private bool $route_triggered;
+
+    /**
+     * Router constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->route_triggered = false;
+    }
+
+    /**
+     * Helper function for triggering a route handler <br />
+     * Updates the `$route_triggered` variable
+     * @param IRequestHandler $handler Is the handler to be triggered
+     * @param Request $req The client request object
+     * @param Response $res The initial response object
+     * @return void
+     */
+    private function trigger_request_handler(IRequestHandler $handler, Request $req, Response $res): void
+    {
+        $handler->handle_request($req, $res);
+        $this->route_triggered = true;
+    }
+
+    /**
      * Processes all middleware handlers
      * @param Request $req The client request object
      * @param Response $res The initial response object
@@ -49,6 +78,10 @@ class Router extends AbstractRouter
      */
     public function map_request_handler(string $method, Request $req, Response $res): void
     {
+        if ($this->route_triggered) {
+            return;
+        }
+
         $route = $res->get_final_route();
 
         if (!isset($this->request_handlers[$method][$route])) {
@@ -56,7 +89,7 @@ class Router extends AbstractRouter
         }
 
         $handler = $this->request_handlers[$method][$route];
-        $handler->handle_request($req, $res);
+        $this->trigger_request_handler($handler, $req, $res);
     }
 
     /**
@@ -79,6 +112,10 @@ class Router extends AbstractRouter
      */
     public function match_request_handler(string $method, Request $req, Response $res): void
     {
+        if ($this->route_triggered) {
+            return;
+        }
+
         if (!isset($this->request_handlers[$method])) {
             return;
         }
@@ -91,7 +128,7 @@ class Router extends AbstractRouter
                 $route_pattern = $matches[1];
 
                 if (preg_match($route_pattern, $res->get_final_route()) > 0) {
-                    $handler->handle_request($req, $res);
+                    $this->trigger_request_handler($handler, $req, $res);
                 }
             }
         }
@@ -117,6 +154,7 @@ class Router extends AbstractRouter
      * First processes middleware then notifies request handlers based on
      * which method was used and which route was accessed in the request
      * @return void
+     * @codeCoverageIgnore
      */
     #[Override]
     public function dispatch(): void
@@ -127,7 +165,6 @@ class Router extends AbstractRouter
         // Generate request and response object
         $input = [];
         parse_str(file_get_contents("php://input"), $input);
-
         $req = new Request(
             $route,
             $input,
@@ -136,6 +173,7 @@ class Router extends AbstractRouter
             $_SESSION
         );
 
+        // Trigger middleware handlers
         $res = $this->process_middleware($req, new Response($route));
 
         // `map_request_handler` will run first; If no matches are made, then `match_request_handler` will run
