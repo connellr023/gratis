@@ -102,6 +102,11 @@ composer install
 <br />
 
 ### Running The PHPUnit Test Suite
+If you want to run the integration tests, the local **PHP** development server must
+be running on `http://localhost:8000`. There is a script to do this in `composer.json`,
+```bash
+composer dev
+```
 In order to the run the entire automated test suite for this framework, execute,
 ```bash
 composer test

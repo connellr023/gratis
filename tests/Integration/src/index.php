@@ -9,8 +9,16 @@ require_once __DIR__ . "/../../../vendor/autoload.php";
 
 $router = new Router();
 
-$router->register_middleware(new HeaderValidatorMiddleware("X-Validation-Header", "test",));
-$router->get("/hello-world", new EchoController("Hello World"));
+$hello_world_controller = new EchoController("Hello World");
+$header_validator_middleware = new HeaderValidatorMiddleware("X-Validation-Header", "test");
+
+$router->register_middleware($header_validator_middleware);
+
+$router->get("/hello-world-get", $hello_world_controller);
+$router->post("/hello-world-post", $hello_world_controller);
+$router->patch("/hello-world-patch", $hello_world_controller);
+$router->put("/hello-world-put", $hello_world_controller);
+$router->delete("/hello-world-delete", $hello_world_controller);
 
 $router->serve_app(__DIR__ . "/View", __DIR__ . "/View/index.html");
 
