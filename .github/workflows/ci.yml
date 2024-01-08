@@ -39,5 +39,5 @@ jobs:
           composer update
           composer install --prefer-dist --no-progress
 
-      - name: Run PHPUnit tests
-        run: composer test-coverage
+      - name: Run unit tests
+        run: composer test:unit

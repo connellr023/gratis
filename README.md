@@ -22,6 +22,7 @@
     - [Controllers](#controllers)
     - [Models](#models)
 - [Development](#development)
+    - [Dependencies](#dependencies)
     - [Installing Dependencies](#installing-dependencies)
     - [Continuous Integration](#running-the-phpunit-test-suite)
 
@@ -73,6 +74,22 @@ Below details information about the development environment.
 
 <br />
 
+### Dependencies
+The required dependencies for this framework are as follows from `composer.json`,
+
+```json
+"require": {
+  "php": "^8.3",
+  "ext-pdo": "*"
+},
+"require-dev": {
+  "phpunit/phpunit": "^10.5",
+  "guzzlehttp/guzzle": "^7.8"
+}
+```
+
+<br />
+
 ### Installing Dependencies
 The only dependency used in this framework is **PHPUnit** for development testing. In order to install **PHPUnit**
 as well as generate autoload files, run the following command,
@@ -83,11 +100,19 @@ composer install
 <br />
 
 ### Running The PHPUnit Test Suite
-In order to the run the automated test suite for this framework, execute,
+In order to the run the entire automated test suite for this framework, execute,
 ```bash
 composer test
 ```
-or see the **GitHub Actions** tab.
+For just integration,
+```bash
+composer test:integration
+```
+For just unit tests,
+```bash
+composer test:unit
+```
+or see the **GitHub Actions** tab which is currently just unit tests.
 
 <br />
 <br />
