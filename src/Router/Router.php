@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Gratis\Framework\Router;
 
-use Gratis\Framework\Controllers\ServeStaticDirectoryController;
+use Gratis\Framework\Controllers\ServeStaticController;
 use Gratis\Framework\HTTP\Request;
 use Gratis\Framework\HTTP\Response;
 use Gratis\Framework\Utility;
@@ -41,8 +41,8 @@ class Router extends AbstractRouter
      */
     private function trigger_request_handler(IRequestHandler $handler, Request $req, Response $res): void
     {
-        $handler->handle_request($req, $res);
         $this->route_triggered = true;
+        $handler->handle_request($req, $res);
     }
 
     /**
@@ -70,6 +70,7 @@ class Router extends AbstractRouter
     /**
      * <b>NOTE:</b> The route that will attempt to be mapped is the
      * final route of the response object <br />
+     *
      * Notifies a request handler registered to a specified method and route with received request data <br />
      * @param string $method The request method to notify
      * @param Request $req The request to be handled by the request handler
@@ -78,10 +79,6 @@ class Router extends AbstractRouter
      */
     public function map_request_handler(string $method, Request $req, Response $res): void
     {
-        if ($this->route_triggered) {
-            return;
-        }
-
         $route = $res->get_final_route();
 
         if (!isset($this->request_handlers[$method][$route])) {
@@ -101,8 +98,6 @@ class Router extends AbstractRouter
      * Registered routes are deemed to be "regular expressions" if they are
      * enclosed in curly braces: `{<exp>}` <br />
      *
-     * Regular expression used: `\{([^{}]+)}`
-     *
      * If a route is matched via the regex, then the corresponding
      * request handler will be notified
      * @param string $method The request method to notify
@@ -112,10 +107,6 @@ class Router extends AbstractRouter
      */
     public function match_request_handler(string $method, Request $req, Response $res): void
     {
-        if ($this->route_triggered) {
-            return;
-        }
-
         if (!isset($this->request_handlers[$method])) {
             return;
         }
@@ -146,13 +137,18 @@ class Router extends AbstractRouter
     public function serve_app(string $app_build_path, string $default_file_path): void
     {
         $route_pattern = "~^\/?(\/[\w.-]+)*$~";
-        $this->get("{ $route_pattern }", new ServeStaticDirectoryController($app_build_path, $default_file_path));
+        $this->get("{ $route_pattern }", new ServeStaticController($app_build_path, $default_file_path));
     }
 
     /**
+     * <b>NOTE:</b> Request handlers will only be triggered if the status
+     * code produced by the middleware handlers is in the "successful range" <br />
+     *
      * Triggered on request <br />
      * First processes middleware then notifies request handlers based on
      * which method was used and which route was accessed in the request
+     *
+     * Will not attempt regex route matching if a route is able to be directly mapped
      * @return void
      * @codeCoverageIgnore
      */
@@ -168,16 +164,23 @@ class Router extends AbstractRouter
         $req = new Request(
             $route,
             $input,
-            $_REQUEST,
-            $_COOKIE,
-            $_SESSION
+            $_REQUEST ?? [],
+            $_COOKIE ?? [],
+            $_SESSION ?? []
         );
 
         // Trigger middleware handlers
         $res = $this->process_middleware($req, new Response($route));
 
-        // `map_request_handler` will run first; If no matches are made, then `match_request_handler` will run
-        $this->map_request_handler($method, $req, $res);
-        $this->match_request_handler($method, $req, $res);
+        // Only trigger request handlers if middleware handlers gave a successful response code
+        if ($res->is_successful_status()) {
+
+            // `map_request_handler` will run first; If no matches are made, then `match_request_handler` will run
+            $this->map_request_handler($method, $req, $res);
+
+            if (!$this->route_triggered) {
+                $this->match_request_handler($method, $req, $res);
+            }
+        }
     }
 }

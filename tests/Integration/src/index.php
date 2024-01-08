@@ -1,26 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-use Gratis\Framework\HTTP\Request;
-use Gratis\Framework\HTTP\Response;
-use Gratis\Framework\Router\IRequestHandler;
 use Gratis\Framework\Router\Router;
-use Gratis\Framework\Router\IMiddlewareHandler;
-use JetBrains\PhpStorm\NoReturn;
+use Gratis\Tests\Integration\src\Controllers\EchoController;
+use Gratis\Tests\Integration\src\Middlewares\HeaderValidatorMiddleware;
 
 require_once __DIR__ . "/../../../vendor/autoload.php";
 
 $router = new Router();
 
+$router->register_middleware(new HeaderValidatorMiddleware("X-Validation-Header", "test",));
+$router->get("/hello-world", new EchoController("Hello World"));
+
 $router->serve_app(__DIR__ . "/View", __DIR__ . "/View/index.html");
-
-$router->get("/api", new class implements IRequestHandler {
-
-    #[NoReturn] #[Override]
-    public function handle_request(Request $req, Response $res): void
-    {
-        echo "get";
-    }
-});
 
 $router->dispatch();

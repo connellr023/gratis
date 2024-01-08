@@ -31,6 +31,6 @@
         "test:unit": "vendor/bin/phpunit --testsuite Unit --no-coverage",
         "test:integration": "vendor/bin/phpunit --testsuite Integration --no-coverage",
         "test": "vendor/bin/phpunit --no-coverage",
-        "dev": "php -S localhost:8000 tests/Integration/src/test_index.php"
+        "dev": "php -S localhost:8000 tests/Integration/src/index.php"
     }
 }

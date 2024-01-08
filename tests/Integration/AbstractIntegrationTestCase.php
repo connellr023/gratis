@@ -12,7 +12,7 @@ use Override;
  */
 abstract class AbstractIntegrationTestCase extends TestCase
 {
-    private const string HOST = "localhost:8000";
+    protected const string HOST = "localhost:8000";
 
     protected static $server_process;
     protected static bool $server_started = false;

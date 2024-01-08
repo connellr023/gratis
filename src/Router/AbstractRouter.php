@@ -91,6 +91,9 @@ abstract class AbstractRouter implements IRouter
     /**
      * Starts listening for requests and dispatches requests
      * to the appropriate middleware and request handler(s)
+     *
+     * Request handlers should only be triggered if the middleware
+     * handlers produce a successful HTTP status code
      * @return void
      */
     public abstract function dispatch(): void;

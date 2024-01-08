@@ -13,7 +13,7 @@ use Override;
  * Controller for handling static file serving
  * @author Connell Reffo
  */
-class ServeStaticDirectoryController implements IRequestHandler
+class ServeStaticController implements IRequestHandler
 {
     /**
      * @var string Full path to where the static webapp markdown is located
@@ -26,7 +26,7 @@ class ServeStaticDirectoryController implements IRequestHandler
     private string $default_file_path;
 
     /**
-     * Constructor for a `ServeStaticDirectoryController`
+     * Constructor for a `ServeStaticController`
      * @param string $app_build_path Is the full path to where the static webapp markup is located
      * @param string $default_file_path Is the full path to the HTML file that should be served by default
      */
@@ -36,7 +36,7 @@ class ServeStaticDirectoryController implements IRequestHandler
         $this->default_file_path = $default_file_path;
     }
 
-    #[NoReturn] #[Override]
+    #[Override]
     public function handle_request(Request $req, Response $res): void
     {
         $accessed_path = $this->app_build_path . $req->get_route_accessed();

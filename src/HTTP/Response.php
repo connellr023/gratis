@@ -28,6 +28,7 @@ class Response
 
     /**
      * Sets the HTTP response code
+     * Uses the built-in `http_response_code` PHP function
      * @param int $status The status code to set
      * @return void
      */
@@ -39,6 +40,7 @@ class Response
 
     /**
      * Gets the current HTTP response code
+     * Uses the built-in `http_response_code` PHP function
      * @return int
      */
     public function get_status_code(): int
@@ -53,7 +55,19 @@ class Response
     }
 
     /**
-     * Sets HTTP response headers
+     * Checks if the HTTP status code of this response object is "successful" <br />
+     * Simply asserts that the code is between 200 and 299 inclusive
+     * @return bool
+     */
+    public function is_successful_status(): bool
+    {
+        $status = $this->get_status_code();
+        return $status >= 200 && $status <= 299;
+    }
+
+    /**
+     * Sets HTTP response headers <br />
+     * Uses the built-in `header` PHP function
      * @param string ...$headers A sequence of headers to be set
      * @return void
      */
@@ -86,7 +100,8 @@ class Response
     }
 
     /**
-     * Sets a cookie
+     * Sets a cookie <br />
+     * Uses the built-in `setcookie` PHP function
      * @param string $name The name of the cookie
      * @param string $value The value associated with the cookies
      * @param int $expiry The time in seconds relative to the current time
@@ -122,6 +137,7 @@ class Response
 
     /**
      * Removes a cookie
+     * Uses the built-in `setcookie` PHP function
      * @param string $name The name of the cookie to remove
      * @return void
      */

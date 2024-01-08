@@ -98,4 +98,15 @@ class Request
     {
         return $this->session[$session_key] ?? null;
     }
+
+    /**
+     * Gets the value associated with a given HTTP header <br />
+     * Uses built in `getallheaders` PHP function
+     * @param string $header_name The name of the header to get the value of
+     * @return string The header value or empty string if nothing found
+     */
+    public function get_from_header(string $header_name): string
+    {
+        return getallheaders()[$header_name] ?? "";
+    }
 }
