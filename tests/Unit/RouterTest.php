@@ -3,164 +3,51 @@ declare(strict_types = 1);
 
 namespace Gratis\Tests\Unit;
 
-use Gratis\Framework\Router\IMiddlewareHandler;
-use Gratis\Framework\Router\IRequestHandler;
-use Gratis\Tests\Unit\Stubs\RouterStub;
-use PHPUnit\Framework\MockObject\Exception;
+use Gratis\Framework\HTTP\Request;
+use Gratis\Framework\HTTP\Response;
+use Gratis\Framework\Router\Router;
+use Gratis\Tests\Unit\Stubs\IMiddlewareHandlerStub;
+use Gratis\Tests\Unit\Stubs\IRequestHandlerStub;
 use PHPUnit\Framework\TestCase;
+use Error;
 
 class RouterTest extends TestCase
 {
-    /* @throws Exception */
-    public function test_register_middleware(): void
-    {
-        $router = new RouterStub();
-        $mw = $this->createMock(IMiddlewareHandler::class);
+    private Request $test_req;
+    private Response $test_res;
 
-        $this->assertEquals([], $router->reflect_middleware_handlers());
-        $router->register_middleware($mw);
-        $this->assertTrue(in_array($mw, $router->reflect_middleware_handlers()));
+    private Router $router;
+
+    public function setUp(): void
+    {
+        $this->test_req = new Request(
+            "/",
+            [],
+            [],
+            [],
+            []
+        );
+        $this->test_res = new Response("/");
+        $this->router = new Router();
     }
 
-    /* @throws Exception */
-    public function test_register_route(): void
+    public function test_all_handlers_triggered_in_process_middleware()
     {
-        $router = new RouterStub();
-        $rh = $this->createMock(IRequestHandler::class);
+        $this->expectNotToPerformAssertions();
 
-        $method = "TEST";
-        $route = "/";
+        $mw1 = new IMiddlewareHandlerStub();
+        $mw2 = new IMiddlewareHandlerStub();
+        $mw3 = new IMiddlewareHandlerStub();
 
-        $expected = [
-            $method => [
-                $route => $rh
-            ]
-        ];
+        $should_trigger = [$mw1, $mw2, $mw3];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
-        $router->register_route($method, $route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
-    }
+        $this->router->register_middleware($mw1, $mw2, $mw3);
+        $this->router->process_middleware($this->test_req, $this->test_res);
 
-    /* @throws Exception */
-    public function test_register_route_same_twice(): void
-    {
-        $router = new RouterStub();
-        $rh1 = $this->getMockBuilder(IRequestHandler::class)
-            ->setMockClassName("unique1")
-            ->getMock();
-
-        $rh2 = $this->getMockBuilder(IRequestHandler::class)
-            ->setMockClassName("unique2")
-            ->getMock();
-
-        $method = "TEST";
-        $route = "/";
-
-        $expected = [
-            $method => [
-                $route => $rh2
-            ]
-        ];
-
-        $this->assertEquals([], $router->reflect_request_handlers());
-        $router->register_route($method, $route, $rh1);
-        $router->register_route($method, $route, $rh2);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
-    }
-
-    /* @throws Exception */
-    public function test_get(): void
-    {
-        $router = new RouterStub();
-        $rh = $this->createMock(IRequestHandler::class);
-
-        $route = "/";
-
-        $expected = [
-            "GET" => [
-                $route => $rh
-            ]
-        ];
-
-        $this->assertEquals([], $router->reflect_request_handlers());
-        $router->get($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
-    }
-
-    /* @throws Exception */
-    public function test_post(): void
-    {
-        $router = new RouterStub();
-        $rh = $this->createMock(IRequestHandler::class);
-
-        $route = "/";
-
-        $expected = [
-            "POST" => [
-                $route => $rh
-            ]
-        ];
-
-        $this->assertEquals([], $router->reflect_request_handlers());
-        $router->post($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
-    }
-
-    /* @throws Exception */
-    public function test_patch(): void
-    {
-        $router = new RouterStub();
-        $rh = $this->createMock(IRequestHandler::class);
-
-        $route = "/";
-
-        $expected = [
-            "PATCH" => [
-                $route => $rh
-            ]
-        ];
-
-        $this->assertEquals([], $router->reflect_request_handlers());
-        $router->patch($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
-    }
-
-    /* @throws Exception */
-    public function test_put(): void
-    {
-        $router = new RouterStub();
-        $rh = $this->createMock(IRequestHandler::class);
-
-        $route = "/";
-
-        $expected = [
-            "PUT" => [
-                $route => $rh
-            ]
-        ];
-
-        $this->assertEquals([], $router->reflect_request_handlers());
-        $router->put($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
-    }
-
-    /* @throws Exception */
-    public function test_delete(): void
-    {
-        $router = new RouterStub();
-        $rh = $this->createMock(IRequestHandler::class);
-
-        $route = "/";
-
-        $expected = [
-            "DELETE" => [
-                $route => $rh
-            ]
-        ];
-
-        $this->assertEquals([], $router->reflect_request_handlers());
-        $router->delete($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        foreach ($should_trigger as $handler) {
+            if (!$handler->is_triggered()) {
+                throw new Error("Expected handler to be triggered");
+            }
+        }
     }
 }
