@@ -31,6 +31,7 @@ Middleware handlers are registered to a `Router` object via the `register_middle
 use \Gratis\Framework\Router\IMiddlewareHandler;
 use \Gratis\Framework\HTTP\Request;
 use \Gratis\Framework\HTTP\Response;
+use \Gratis\Framework\Router\Router;
 use Override;
 
 require_once __DIR__ . "vendor/autoload.php";

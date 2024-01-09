@@ -37,10 +37,11 @@ the functions following it are simply aliases.
 use \Gratis\Framework\Router\IRequestHandler;
 use \Gratis\Framework\HTTP\Request;
 use \Gratis\Framework\HTTP\Response;
+use \Gratis\Framework\Router\Router;
 use Controllers\EchoController; // Namespace for your controller
 use Override;
 
-require_once __DIR__ . "vendor/autoload.php";
+require_once __DIR__ . "../vendor/autoload.php";
 
 $router = new Router();
 $hello_world_controller = new EchoController("Hello World");

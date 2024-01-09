@@ -30,6 +30,8 @@ A model to represent an entry in the *users* table can be defined as follows,
 use Gratis\Framework\AbstractModel;
 use Gratis\Framework\Database\Database;
 
+require_once __DIR__ . "../vendor/autoload.php";
+
 $db = new Database(...); // Enter SQL database connection as parameters
 
 // Must configure database instance in order for models to access it
