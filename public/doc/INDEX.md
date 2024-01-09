@@ -10,6 +10,6 @@
     - [Controllers](CONTROLLERS.md)
     - [Models](MODELS.md)
     - [View](VIEW.md)
-- Utilities
-    - [Router](ROUTER.md)
-    - [Database](DATABASE.md)
+- Services
+    - [Router Class](ROUTER.md)
+    - [Database Class](DATABASE.md)

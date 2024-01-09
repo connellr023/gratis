@@ -23,3 +23,12 @@ $router->delete("/hello-world-delete", $hello_world_controller);
 $router->serve_app(__DIR__ . "/View", __DIR__ . "/View/index.html");
 
 $router->dispatch();
+
+$router->register_middleware(new class implements \Gratis\Framework\Router\IMiddlewareHandler {
+
+    #[\Override]
+    public function handle_middleware(\Gratis\Framework\HTTP\Request $req, \Gratis\Framework\HTTP\Response $res, Closure $next): \Gratis\Framework\HTTP\Response
+    {
+        // TODO: Implement handle_middleware() method.
+    }
+});
