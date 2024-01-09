@@ -8,7 +8,8 @@
  <img src="https://img.shields.io/badge/developer-Connell Reffo-de2349">
  <img src="https://img.shields.io/badge/license-MIT-3643d1">
  <img src="https://img.shields.io/badge/language-PHP-937dbd">
- <img src="https://github.com/connellr023/gratis/actions/workflows/ci.yml/badge.svg">
+ <img src="https://github.com/connellr023/gratis/actions/workflows/unit.yml/badge.svg">
+<img src="https://github.com/connellr023/gratis/actions/workflows/integration.yml/badge.svg">
 </div>
 
 <br />
@@ -120,7 +121,7 @@ For just unit tests,
 ```bash
 composer test:unit
 ```
-or see the **GitHub Actions** tab which is currently just unit tests.
+or see the **GitHub Actions** tab.
 
 <br />
 <br />
