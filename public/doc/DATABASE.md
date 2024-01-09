@@ -24,11 +24,11 @@ __construct(string $hostname, string $db_name, string $username, string $passwor
 Creates a new `Database` instance and initializes a `PDO` connection to the specified database.
 
 - **Parameters:**
-    - `$hostname` (string): The hostname of the database.
-    - `$db_name` (string): The name of the database.
-    - `$username` (string): The username to interact with the database under.
-    - `$password` (string): The user's password.
-    - `$driver` (string): The driver to be used by this database instance. Must be one of the following:
+    - `$hostname` (`string`): The hostname of the database.
+    - `$db_name` (`string`): The name of the database.
+    - `$username` (`string`): The username to interact with the database under.
+    - `$password` (`string`): The user's password.
+    - `$driver` (`string`): The driver to be used by this database instance. Must be one of the following:
         - "mysql"
         - "cubrid"
         - "mssql"
@@ -49,7 +49,6 @@ Creates a new `Database` instance and initializes a `PDO` connection to the spec
 
 ### Methods
 
-#### 1. 
 ```php
 execute_query(string $sql): void
 ```
@@ -57,7 +56,7 @@ execute_query(string $sql): void
 Executes an SQL query against the connected database.
 
 - **Parameters:**
-    - `$sql` (string): The SQL instruction to be executed.
+    - `$sql` (`string`): The SQL instruction to be executed.
 
 - **Returns:**
     - `void`
@@ -67,7 +66,6 @@ Executes an SQL query against the connected database.
 
 <br />
 
-#### 2.
 ```php
 execute_prepared_statement(string $sql, array $params): void
 ```
@@ -75,8 +73,8 @@ execute_prepared_statement(string $sql, array $params): void
 Prepares an SQL query and inserts a sequence of parameters into their respective positions denoted by "?" or ":param" placeholders.
 
 - **Parameters:**
-    - `$sql` (string): The SQL command to be prepared.
-    - `$params` (array): The parameters to be inserted.
+    - `$sql` (`string`): The SQL command to be prepared.
+    - `$params` (`array`): The parameters to be inserted.
 
 - **Returns:**
     - `void`
@@ -86,7 +84,6 @@ Prepares an SQL query and inserts a sequence of parameters into their respective
 
 <br />
 
-#### 3. 
 ```php
 fetch_assoc(): array
 ```
@@ -101,7 +98,6 @@ Fetches an associative array of values based on the `SELECT` query that was just
 
 <br />
 
-#### 4.
 ```php
 fetch_last_insert_id(?string $field_name = null): string
 ```
@@ -119,7 +115,7 @@ Gets the ID of the last row inserted into a table.
 
 <br />
 
-## Example Usage
+### Example Usage
 
 ```php
 // Instantiate a Database object with a database connection
