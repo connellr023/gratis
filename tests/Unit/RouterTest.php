@@ -31,7 +31,7 @@ class RouterTest extends TestCase
         $this->router = new Router();
     }
 
-    public function test_all_handlers_triggered_in_process_middleware()
+    public function test_all_handlers_triggered_in_process_middleware(): void
     {
         $this->expectNotToPerformAssertions();
 
@@ -49,5 +49,79 @@ class RouterTest extends TestCase
                 throw new Error("Expected handler to be triggered");
             }
         }
+    }
+
+    public function test_map_request_handler_wrong_method(): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        $rh = new IRequestHandlerStub();
+
+        $this->router->post("/", $rh);
+        $this->router->map_request_handler("GET", $this->test_req, $this->test_res);
+
+        if ($rh->is_triggered()) {
+            throw new Error("Expected handler to not be triggered");
+        }
+    }
+
+    public function test_map_request_handler_valid_route(): void
+    {
+        $rh = new IRequestHandlerStub();
+
+        $this->router->get("/", $rh);
+        $this->router->map_request_handler("GET", $this->test_req, $this->test_res);
+
+        $this->assertTrue($rh->is_triggered());
+    }
+
+    public function test_exactly_one_handler_triggered_with_map_request_handler(): void
+    {
+        $rh1 = new IRequestHandlerStub();
+        $rh2 = new IRequestHandlerStub();
+
+        $this->router->get("/", $rh1);
+        $this->router->get("/", $rh2);
+        $this->router->map_request_handler("GET", $this->test_req, $this->test_res);
+
+        $this->assertFalse($rh1->is_triggered());
+        $this->assertTrue($rh2->is_triggered());
+    }
+
+    public function test_match_request_handler_invalid_method(): void
+    {
+        $this->expectNotToPerformAssertions();
+
+        $rh = new IRequestHandlerStub();
+
+        $this->router->post("< ~(.*)~ >", $rh); // Accept every route string
+        $this->router->match_request_handler("GET", $this->test_req, $this->test_res);
+
+        if ($rh->is_triggered()) {
+            throw new Error("Expected handler to not be triggered");
+        }
+    }
+
+    public function test_exactly_one_request_handler_triggered_with_match_request_handler(): void
+    {
+        $rh1 = new IRequestHandlerStub();
+        $rh2 = new IRequestHandlerStub();
+
+        $this->router->get("< ~(.*)~ >", $rh1);
+        $this->router->get("< ~(.*)~ >", $rh2);
+        $this->router->match_request_handler("GET", $this->test_req, $this->test_res);
+
+        $this->assertFalse($rh1->is_triggered());
+        $this->assertTrue($rh2->is_triggered());
+    }
+
+    public function test_match_request_handler_string_not_accepted(): void
+    {
+        $rh = new IRequestHandlerStub();
+
+        $this->router->get("< ~^(.*a.*){2}[^a]*$~ >", $rh); // Accepts all strings that contain <i>at least 2</i> copies of "a"
+        $this->router->match_request_handler("GET", $this->test_req, new Response("/ab")); // Only one copy of "a", so should reject
+
+        $this->assertFalse($rh->is_triggered());
     }
 }

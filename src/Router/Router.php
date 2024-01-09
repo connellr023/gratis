@@ -96,7 +96,10 @@ class Router extends AbstractRouter
      * and attempt to match the passed route to each <br />
      *
      * Registered routes are deemed to be "regular expressions" if they are
-     * enclosed in curly braces: `{<exp>}` <br />
+     * enclosed in angle brackets with a space of padding: `< (exp) >` <br />
+     * Delimiters must be included within the angle brackets as well <br />
+     * The pattern within the angle brackets must not contain open and close angle
+     * brackets with anything in between: `< <> >` (won't work) <br />
      *
      * If a route is matched via the regex, then the corresponding
      * request handler will be notified
@@ -112,7 +115,7 @@ class Router extends AbstractRouter
         }
 
         $method_handlers = $this->request_handlers[$method];
-        $pattern = "/\{([^{}]+)}/";
+        $pattern = "~<\s+([^>]+)\s+>~";
 
         foreach ($method_handlers as $registered_route => $handler) {
             if (preg_match($pattern, $registered_route, $matches) && isset($matches[1])) {
@@ -120,6 +123,7 @@ class Router extends AbstractRouter
 
                 if (preg_match($route_pattern, $res->get_final_route()) > 0) {
                     $this->trigger_request_handler($handler, $req, $res);
+                    return;
                 }
             }
         }
@@ -133,11 +137,12 @@ class Router extends AbstractRouter
      * @param string $app_build_path Is the full path to the directory containing the app's static markup
      * @param string $default_file_path Is the full path to the default file to be served if nothing else found
      * @return void
+     * @codeCoverageIgnore This is tested in integration
      */
     public function serve_app(string $app_build_path, string $default_file_path): void
     {
         $route_pattern = "~^\/?(\/[\w.-]+)*$~";
-        $this->get("{ $route_pattern }", new ServeStaticController($app_build_path, $default_file_path));
+        $this->get("< $route_pattern >", new ServeStaticController($app_build_path, $default_file_path));
     }
 
     /**
@@ -150,7 +155,6 @@ class Router extends AbstractRouter
      *
      * Will not attempt regex route matching if a route is able to be directly mapped
      * @return void
-     * @codeCoverageIgnore
      */
     #[Override]
     public function dispatch(): void
