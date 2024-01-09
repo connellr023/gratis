@@ -101,4 +101,19 @@ class Database implements IDatabase
             throw new GratisException("Failed to read result from last statement: " . $e->getMessage());
         }
     }
+
+    #[Override]
+    public function fetch_last_insert_id(?string $field_name): string
+    {
+        try {
+            if (!($res = $this->pdo->lastInsertId($field_name))) {
+                return $res;
+            }
+
+            throw new GratisException("Failed to read last insert ID");
+        }
+        catch (PDOException $e) {
+            throw new GratisException("Failed to read last insert ID: " . $e->getMessage());
+        }
+    }
 }

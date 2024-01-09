@@ -35,4 +35,6 @@ interface IDatabase
      * @throws GratisException If the values fail to be retrieved
      */
     public function fetch_assoc(): array;
+
+    public function fetch_last_insert_id(?string $field_name): string;
 }
