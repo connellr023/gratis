@@ -23,7 +23,7 @@ are dispatched to a controller end-point.
 <br />
 
 ### Registering Middleware Handlers
-Middleware handlers are registered to `Router` object via the `register_middleware` function.
+Middleware handlers are registered to a `Router` object via the `register_middleware` function.
 
 #### Example
 > *index.php*
@@ -51,8 +51,7 @@ $router->register_middleware(new class implements IMiddlewareHandler {
         $next($req, $res)                                   // Call next middleware function
                                                             // Can be conditionally called
                                                           
-        return $res;                                        // Must return a response object to pass
-                                                            // to next middleware handler
+        return $res;                                        // Must return a response object
     }
 });
 
