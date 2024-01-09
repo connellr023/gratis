@@ -21,7 +21,7 @@ Static files can be served by using the `serve_app` function from a `Router` ins
 #### Example
 > *index.php*
 ```php
-use \Gratis\Framework\Router\Router;
+use Gratis\Framework\Router\Router;
 use Override;
 
 require_once __DIR__ . "../vendor/autoload.php";

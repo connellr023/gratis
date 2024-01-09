@@ -34,10 +34,10 @@ the functions following it are simply aliases.
 #### Example
 > *index.php*
 ```php
-use \Gratis\Framework\Router\IRequestHandler;
-use \Gratis\Framework\HTTP\Request;
-use \Gratis\Framework\HTTP\Response;
-use \Gratis\Framework\Router\Router;
+use Gratis\Framework\Router\IRequestHandler;
+use Gratis\Framework\HTTP\Request;
+use Gratis\Framework\HTTP\Response;
+use Gratis\Framework\Router\Router;
 use Controllers\EchoController; // Namespace for your controller
 use Override;
 
