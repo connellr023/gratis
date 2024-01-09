@@ -103,10 +103,10 @@ class Database implements IDatabase
     }
 
     #[Override]
-    public function fetch_last_insert_id(?string $field_name): string
+    public function fetch_last_insert_id(?string $field_name = null): string
     {
         try {
-            if (!($res = $this->pdo->lastInsertId($field_name))) {
+            if ($res = $this->pdo->lastInsertId($field_name)) {
                 return $res;
             }
 

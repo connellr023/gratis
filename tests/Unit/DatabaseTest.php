@@ -166,4 +166,49 @@ class DatabaseTest extends TestCase
         $db->execute_query($sql);
         $db->fetch_assoc();
     }
+
+    /* @throws Exception */
+    public function test_fetch_last_insert_id_success(): void
+    {
+        $pdo_mock = $this->createMock(PDO::class);
+
+        $pdo_mock->expects($this->once())
+            ->method("lastInsertId")
+            ->willReturn("1");
+
+        $db = new DatabaseStub($pdo_mock);
+        $id = intval($db->fetch_last_insert_id());
+
+        $this->assertSame(1, $id);
+    }
+
+    /* @throws Exception */
+    public function test_fetch_last_insert_id_db_fail(): void
+    {
+        $this->expectException(GratisException::class);
+
+        $pdo_mock = $this->createMock(PDO::class);
+
+        $pdo_mock->expects($this->once())
+            ->method("lastInsertId")
+            ->willThrowException(new PDOException());
+
+        $db = new DatabaseStub($pdo_mock);
+        $db->fetch_last_insert_id();
+    }
+
+    /* @throws Exception */
+    public function test_fetch_last_insert_id_false_return(): void
+    {
+        $this->expectException(GratisException::class);
+
+        $pdo_mock = $this->createMock(PDO::class);
+
+        $pdo_mock->expects($this->once())
+            ->method("lastInsertId")
+            ->willReturn(false);
+
+        $db = new DatabaseStub($pdo_mock);
+        $db->fetch_last_insert_id();
+    }
 }

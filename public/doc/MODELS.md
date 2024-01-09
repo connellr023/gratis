@@ -111,3 +111,8 @@ class User extends AbstractModel
 }
 ```
 The above *user* model class can be used to fetch and insert to and from the *users* table.
+
+<br />
+
+The `AbstractModel` class is more of a utility than a requirement. In reality, you can define a model
+class however you want without the use of what this framework provides.

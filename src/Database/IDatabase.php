@@ -36,5 +36,11 @@ interface IDatabase
      */
     public function fetch_assoc(): array;
 
-    public function fetch_last_insert_id(?string $field_name): string;
+    /**
+     * Gets the ID of the last row inserted into a table
+     * @param string|null $field_name
+     * @return string
+     * @throws GratisException If reading the last insert ID fails
+     */
+    public function fetch_last_insert_id(?string $field_name = null): string;
 }
