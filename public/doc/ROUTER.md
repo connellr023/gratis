@@ -22,7 +22,7 @@ handlers to specified HTTP methods and routes.
 
 ### Constructor
 
-The **Router** class does not have its own constructor method. It inherits the constructor from the `AbstractRouter` class, which initializes the arrays for middleware handlers and request handlers.
+The `Router` class does not have its own constructor method. It inherits the constructor from the `AbstractRouter` class, which initializes the arrays for middleware handlers and request handlers.
 
 <br />
 
