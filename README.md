@@ -5,8 +5,9 @@
 > A lightweight framework for developing *REST-like* APIs in **PHP**.
 
 <div align="left">
- <img src="https://img.shields.io/badge/developer-Connell Reffo-purple">
- <img src="https://img.shields.io/badge/license-MIT-lightgreen">
+ <img src="https://img.shields.io/badge/developer-Connell Reffo-de2349">
+ <img src="https://img.shields.io/badge/license-MIT-3643d1">
+ <img src="https://img.shields.io/badge/language-PHP-937dbd">
  <img src="https://github.com/connellr023/gratis/actions/workflows/ci.yml/badge.svg">
 </div>
 

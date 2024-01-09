@@ -31,6 +31,16 @@ class RouterTest extends TestCase
         $this->router = new Router();
     }
 
+    public function tearDown(): void
+    {
+        unset($_SERVER);
+        unset($_REQUEST);
+        unset($_GET);
+        unset($_POST);
+        unset($_SESSION);
+        unset($_COOKIE);
+    }
+
     public function test_all_handlers_triggered_in_process_middleware(): void
     {
         $this->expectNotToPerformAssertions();
@@ -123,5 +133,71 @@ class RouterTest extends TestCase
         $this->router->match_request_handler("GET", $this->test_req, new Response("/ab")); // Only one copy of "a", so should reject
 
         $this->assertFalse($rh->is_triggered());
+    }
+
+    public function test_dispatch_unsuccessful_status(): void
+    {
+        $mw = new IMiddlewareHandlerStub(404);
+        $rh = new IRequestHandlerStub();
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        $this->router->register_middleware($mw);
+        $this->router->get("/", $rh);
+        $this->router->dispatch();
+
+        $this->assertFalse($rh->is_triggered());
+    }
+
+    public function test_dispatch_successful_status(): void
+    {
+        $mw = new IMiddlewareHandlerStub();
+        $rh = new IRequestHandlerStub();
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        $this->router->register_middleware($mw);
+        $this->router->get("/", $rh);
+        $this->router->dispatch();
+
+        $this->assertTrue($rh->is_triggered());
+    }
+
+    public function test_match_request_handler_not_executed(): void
+    {
+        $mw = new IMiddlewareHandlerStub();
+        $rh1 = new IRequestHandlerStub();
+        $rh2 = new IRequestHandlerStub();
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        $this->router->register_middleware($mw);
+        $this->router->get("/", $rh1);
+        $this->router->get("< ~(.*)~ >", $rh2);
+        $this->router->dispatch();
+
+        $this->assertTrue($rh1->is_triggered());
+        $this->assertFalse($rh2->is_triggered());
+    }
+
+    public function test_match_request_handler_is_executed(): void
+    {
+        $mw = new IMiddlewareHandlerStub();
+        $rh1 = new IRequestHandlerStub();
+        $rh2 = new IRequestHandlerStub();
+
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $_SERVER["REQUEST_URI"] = "/";
+
+        $this->router->register_middleware($mw);
+        $this->router->post("/", $rh1);
+        $this->router->get("< ~(.*)~ >", $rh2);
+        $this->router->dispatch();
+
+        $this->assertFalse($rh1->is_triggered());
+        $this->assertTrue($rh2->is_triggered());
     }
 }

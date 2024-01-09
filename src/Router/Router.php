@@ -159,8 +159,8 @@ class Router extends AbstractRouter
     #[Override]
     public function dispatch(): void
     {
-        $method = $_SERVER["REQUEST_METHOD"];
-        $route = Utility::sanitize_route_string(parse_url($_SERVER["REQUEST_URI"])["path"] ?? "");
+        $method = $_SERVER["REQUEST_METHOD"] ?? "";
+        $route = Utility::sanitize_route_string(parse_url($_SERVER["REQUEST_URI"] ?? "")["path"] ?? "");
 
         // Generate request and response object
         $input = [];
