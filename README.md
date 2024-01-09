@@ -1,5 +1,5 @@
 <h1>
- <img src="https://github.com/connellr023/gratis/blob/main/public/logo_large.png?raw=true" width="450px" />
+ <img src="https://github.com/connellr023/gratis/blob/main/public/images/logo_large.png?raw=true" width="450px" />
 </h1>
 
 > A lightweight framework for developing *REST-like* APIs in **PHP**.
@@ -16,11 +16,14 @@
 
 ### Table Of Contents
 - [Overview](#overview)
+- [Composer](#composer)
 - [Intended Structure](#intended-structure)
     - [Middlewares](#middlewares)
     - [Controllers](#controllers)
     - [Models](#models)
     - [View](#view)
+- [Documentation](public/doc/INDEX.md)
+  - [Index]()
 - [Development](#development)
     - [Dependencies](#dependencies)
     - [Installing Dependencies](#installing-dependencies)
@@ -29,10 +32,18 @@
 <br />
 
 ### Overview
-Gratis is a versatile framework designed to promote the separation of concerns,
+**Gratis** is a versatile framework designed to promote the separation of concerns,
 fostering scalable code practices by encapsulating logic within handlers.
 Primarily tailored for creating robust and scalable APIs that follow the **CRUD** lifecycle, the framework follows a *REST-like* architectural style.
 It seamlessly interacts with **SQL** databases, providing a structured and efficient foundation for building web applications.
+
+<br />
+
+### Composer
+The **Gratis** framework can be used in a composer **PHP** project by running the following command,
+```bash
+composer require gratis/gratis
+```
 
 <br />
 
@@ -54,7 +65,7 @@ It seamlessly interacts with **SQL** databases, providing a structured and effic
     │
     └── ...
 ```
-The code structure is meticulously crafted to adhere to a well-defined separation of concerns, delineating distinct roles for *model*, *controller*, and *middleware* components.
+The code structure is meticulously crafted to adhere to a well-defined separation of concerns, delineating distinct roles for *model*, *controller*, *middleware*, and *view* components.
 
 - ### Middlewares
   Positioned at the forefront of the process, middlewares gain initial access to client *request* and *response* objects before the controller takes charge. This makes them adept at tasks like client verification and handling cross-origin resource sharing.
@@ -127,7 +138,7 @@ or see the **GitHub Actions** tab.
 <br />
 
 <div align="center">
- <img src="https://github.com/connellr023/gratis/blob/main/public/logo_small.png?raw=true" width="150px" />
+ <img src="https://github.com/connellr023/gratis/blob/main/public/images/logo_small.png?raw=true" width="150px" />
  <br />
  <br />
  <div>Developed and tested by <b>Connell Reffo</b> in 2024.</div>
