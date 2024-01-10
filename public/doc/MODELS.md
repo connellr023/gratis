@@ -27,11 +27,6 @@ A model to represent an entry in the *users* table can be defined as follows,
 
 > *db.php*
 ```php
-use Gratis\Framework\AbstractModel;
-use Gratis\Framework\Database\Database;
-
-require_once __DIR__ . "../vendor/autoload.php";
-
 $db = new Database(...); // Enter SQL database connection as parameters
 
 // Must configure database instance in order for models to access it
@@ -42,9 +37,6 @@ AbstractModel::configure_db_instance($db);
 
 > *User.php*
 ```php
-use Gratis\Framework\AbstractModel;
-use Gratis\Framework\Exceptions\GratisException;
-
 class User extends AbstractModel
 {
     private int $user_id;
@@ -112,7 +104,9 @@ class User extends AbstractModel
     }
 }
 ```
-The above *user* model class can be used to fetch and insert to and from the *users* table.
+The above *user* model class can be used to fetch and insert to and from the *users* table. It is important
+to note that additional verification and sanitization of passed data is recommended when interacting
+with any form of database.
 
 <br />
 

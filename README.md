@@ -50,7 +50,7 @@ It allows form seamless interactions with **SQL** databases, providing a structu
 ### Composer
 The **Gratis** framework can be used in a composer **PHP** project by running the following command,
 ```bash
-composer require gratis/gratis
+composer require connell/gratis
 ```
 
 <br />
