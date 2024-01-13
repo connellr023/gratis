@@ -12,8 +12,13 @@ class RouterStub extends Router
         return $this->middleware_handlers;
     }
 
-    public function reflect_request_handlers(): array
+    public function reflect_mappable_request_handlers(): array
     {
-        return $this->request_handlers;
+        return $this->mappable_request_handlers;
+    }
+
+    public function reflect_regex_request_handlers(): array
+    {
+        return $this->regex_request_handlers;
     }
 }

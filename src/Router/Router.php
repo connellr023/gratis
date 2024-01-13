@@ -81,11 +81,11 @@ class Router extends AbstractRouter
     {
         $route = $res->get_final_route();
 
-        if (!isset($this->request_handlers[$method][$route])) {
+        if (!isset($this->mappable_request_handlers[$method][$route])) {
             return;
         }
 
-        $handler = $this->request_handlers[$method][$route];
+        $handler = $this->mappable_request_handlers[$method][$route];
         $this->trigger_request_handler($handler, $req, $res);
     }
 
@@ -110,21 +110,16 @@ class Router extends AbstractRouter
      */
     public function match_request_handler(string $method, Request $req, Response $res): void
     {
-        if (!isset($this->request_handlers[$method])) {
+        if (!isset($this->regex_request_handlers[$method])) {
             return;
         }
 
-        $method_handlers = $this->request_handlers[$method];
-        $pattern = "~<\s+([^>]+)\s+>~";
+        $method_handlers = $this->regex_request_handlers[$method];
 
-        foreach ($method_handlers as $registered_route => $handler) {
-            if (preg_match($pattern, $registered_route, $matches) && isset($matches[1])) {
-                $route_pattern = $matches[1];
-
-                if (preg_match($route_pattern, $res->get_final_route()) > 0) {
-                    $this->trigger_request_handler($handler, $req, $res);
-                    return;
-                }
+        foreach ($method_handlers as $registered_route_regex => $handler) {
+            if (preg_match($registered_route_regex, $res->get_final_route()) > 0) {
+                $this->trigger_request_handler($handler, $req, $res);
+                return;
             }
         }
     }
@@ -163,7 +158,6 @@ class Router extends AbstractRouter
         $route = Utility::sanitize_route_string(parse_url($_SERVER["REQUEST_URI"] ?? "")["path"] ?? "");
 
         // Generate request and response object
-        $input = [];
         parse_str(file_get_contents("php://input"), $input);
         $req = new Request(
             $route,

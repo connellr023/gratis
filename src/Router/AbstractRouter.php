@@ -12,19 +12,27 @@ use Override;
 abstract class AbstractRouter implements IRouter
 {
     /**
+     * Pattern used for checking if a route string should be a regex route <br />
+     * `< (exp) >`
+     */
+    protected const string REGEX_ROUTE_PATTERN = "~<\s+([^>]+)\s+>~";
+
+    /**
      * @var IMiddlewareHandler[] An array of middleware handlers to be triggered on request
      */
     protected array $middleware_handlers;
 
     /**
-     * @var array An associate array. Structured as follows: <br />
-     * [
-     *  (method) => [
-     *    (route) => IRequestHandler
-     *  ]
-     * ]
+     * @var array An associative array of request handlers that
+     *            listen for routes that can be directly mapped
      */
-    protected array $request_handlers;
+    protected array $mappable_request_handlers;
+
+    /**
+     * @var array An associative array of request handlers that
+     *            listen for routes that are a regular expression
+     */
+    protected array $regex_request_handlers;
 
     /**
      * Base constructor
@@ -32,7 +40,18 @@ abstract class AbstractRouter implements IRouter
     public function __construct()
     {
         $this->middleware_handlers = [];
-        $this->request_handlers = [];
+        $this->mappable_request_handlers = [];
+        $this->regex_request_handlers = [];
+    }
+
+    /**
+     * Helper method for extracting the RegExp enclosed between angle braces when registering routes
+     * @param string $route The regex route to extract the inner regex from
+     * @return string|false The extracted regex string or false if failed
+     */
+    protected static function extract_regex_from_route(string $route): string|false
+    {
+        return (preg_match(self::REGEX_ROUTE_PATTERN, $route, $matches) && isset($matches[1])) ? $matches[1] : false;
     }
 
     #[Override]
@@ -53,9 +72,16 @@ abstract class AbstractRouter implements IRouter
     {
         $route = Utility::sanitize_route_string($route);
 
-        $this->request_handlers[$method] ??= [];
-        $this->request_handlers[$method][$route] ??= [];
-        $this->request_handlers[$method][$route] = $handler;
+        if ($regex = self::extract_regex_from_route($route)) {
+            $this->regex_request_handlers[$method] ??= [];
+            $this->regex_request_handlers[$method][$regex] ??= [];
+            $this->regex_request_handlers[$method][$regex] = $handler;
+        }
+        else {
+            $this->mappable_request_handlers[$method] ??= [];
+            $this->mappable_request_handlers[$method][$route] ??= [];
+            $this->mappable_request_handlers[$method][$route] = $handler;
+        }
     }
 
     #[Override]

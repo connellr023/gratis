@@ -23,7 +23,7 @@ class AbstractRouterTest extends TestCase
     }
 
     /* @throws Exception */
-    public function test_register_route(): void
+    public function test_register_mappable_route(): void
     {
         $router = new RouterStub();
         $rh = $this->createMock(IRequestHandler::class);
@@ -37,9 +37,31 @@ class AbstractRouterTest extends TestCase
             ]
         ];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
         $router->register_route($method, $route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        $this->assertEquals($expected, $router->reflect_mappable_request_handlers());
+    }
+
+    /* @throws Exception */
+    public function test_register_regex_route(): void
+    {
+        $router = new RouterStub();
+        $rh = $this->createMock(IRequestHandler::class);
+
+        $method = "TEST";
+        $regex_route = "< /(.*)/ >";
+        $extracted_regex = "/(.*)/";
+
+        $expected = [
+            $method => [
+                $extracted_regex => $rh
+            ]
+        ];
+
+        $this->assertEquals([], $router->reflect_regex_request_handlers());
+        $router->register_route($method, $regex_route, $rh);
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
+        $this->assertEquals($expected, $router->reflect_regex_request_handlers());
     }
 
     /* @throws Exception */
@@ -63,10 +85,11 @@ class AbstractRouterTest extends TestCase
             ]
         ];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
         $router->register_route($method, $route, $rh1);
         $router->register_route($method, $route, $rh2);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_regex_request_handlers());
+        $this->assertEquals($expected, $router->reflect_mappable_request_handlers());
     }
 
     /* @throws Exception */
@@ -83,9 +106,9 @@ class AbstractRouterTest extends TestCase
             ]
         ];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
         $router->get($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        $this->assertEquals($expected, $router->reflect_mappable_request_handlers());
     }
 
     /* @throws Exception */
@@ -102,9 +125,9 @@ class AbstractRouterTest extends TestCase
             ]
         ];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
         $router->post($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        $this->assertEquals($expected, $router->reflect_mappable_request_handlers());
     }
 
     /* @throws Exception */
@@ -121,9 +144,9 @@ class AbstractRouterTest extends TestCase
             ]
         ];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
         $router->patch($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        $this->assertEquals($expected, $router->reflect_mappable_request_handlers());
     }
 
     /* @throws Exception */
@@ -140,9 +163,9 @@ class AbstractRouterTest extends TestCase
             ]
         ];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
         $router->put($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        $this->assertEquals($expected, $router->reflect_mappable_request_handlers());
     }
 
     /* @throws Exception */
@@ -159,8 +182,8 @@ class AbstractRouterTest extends TestCase
             ]
         ];
 
-        $this->assertEquals([], $router->reflect_request_handlers());
+        $this->assertEquals([], $router->reflect_mappable_request_handlers());
         $router->delete($route, $rh);
-        $this->assertEquals($expected, $router->reflect_request_handlers());
+        $this->assertEquals($expected, $router->reflect_mappable_request_handlers());
     }
 }
